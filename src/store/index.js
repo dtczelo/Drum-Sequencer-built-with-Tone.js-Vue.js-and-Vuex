@@ -5,8 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    mainClock: 0
   },
   mutations: {
+     incrementMainClock (state, time) {
+      state.mainClock = time
+     }
   },
   actions: {
   },
