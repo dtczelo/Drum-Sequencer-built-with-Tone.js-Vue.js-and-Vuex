@@ -75,6 +75,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import RoundSlider from "vue-round-slider";
 import Switches from 'vue-switches';
 
@@ -92,7 +94,6 @@ export default {
         tracksSamplesPaths: Array,
         currentTrack: Number,
         trackNumber: Number,
-        currentStep: Number,
         track: Array,
     },
     data() {
@@ -116,8 +117,12 @@ export default {
         },
         fadeSlider() {
             this.trackSample.playbackRate = this.fadeSlider;
+        },
+        isReversed() {
+            this.trackSample.reverse = this.isReversed;
         }
     },
+    computed: mapGetters(['currentStep']),
     methods: {
         changeTrack() {
             this.$emit("change-track", this.trackNumber);

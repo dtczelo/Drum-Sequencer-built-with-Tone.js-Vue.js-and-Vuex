@@ -3,11 +3,9 @@
         <div class="tracks" >
             <Track
                 v-for="(track, index) in tracks"
-                :tracksSamplesPaths="tracksSamplesPaths"
                 :track="track"
                 :key="index"
                 :currentTrack="currentTrack"
-                :currentStep="currentStep"
                 :trackNumber="index"
                 @change-track="onChangeTrack"
             >
@@ -24,7 +22,6 @@
                 :index="index"
                 :active="step.active"
                 :currentTrack="step.trackNumber"
-                :currentStep="currentStep"
                 @on-add-step="onAddStep"
                 class="steps__step"
                 >{{ (index += 1) }}
@@ -114,18 +111,9 @@ export default {
             tempo: 90,
             isPlaying: false,
             currentMeasure: 0,
-            scheduleTick: 0,
-            currentStep: 0,
-            numberOfSteps: 16,
             numberOfTracks: 4,
             tracks: [],
             currentTrack: 0,
-            tracksSamplesPaths: [
-                "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav",
-                "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav",
-                "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808OHH.wav",
-                "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav",
-            ],
         };
     },
     watch: {
@@ -163,15 +151,14 @@ export default {
         handleClockTime() {
             this.$tone.Transport.scheduleRepeat((time) => {
                 this.$store.commit("incrementMainClock", time);
-                this.currentStep = this.scheduleTick % this.numberOfSteps;
-                this.scheduleTick++;
+                this.$store.commit("incrementScheduleTick");
             }, "16n");
         },
     },
     created() {
         for (let i = 0; i < this.numberOfTracks; i++) {
             const filledArray = Array.from(
-                { length: this.numberOfSteps },
+                { length: this.$store.state.numberOfSteps },
                 () => ({
                     id: this.$uuid(),
                     trackNumber: i,

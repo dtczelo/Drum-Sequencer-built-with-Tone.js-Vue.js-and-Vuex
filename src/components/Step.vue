@@ -9,10 +9,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     props: {
         index: Number,
-        currentStep: Number,
         active: Boolean,
         currentTrack: Number
     },
@@ -27,6 +28,7 @@ export default {
                 : this.isCurrentStep === false;
         },
     },
+    computed: mapGetters(['currentStep']),
     methods: {
         onAddStep() {
             this.$emit("on-add-step", this.index);
