@@ -1,7 +1,10 @@
 <template>
     <button
-        @click="onAddStep"
-        :class="{ active: active, activeStep: currentStep === index }"
+        @click.stop="onAddStep"
+        :class="{
+            active: active,
+            activeStep: currentStep === index && isPlaying,
+        }"
         class="step"
     >
         <slot></slot>
@@ -9,26 +12,28 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
     props: {
         index: Number,
+        isPlaying: Boolean,
         active: Boolean,
-        currentTrack: Number
+        currentTrack: Number,
     },
     data() {
-        return {
-        };
+        return {};
     },
     watch: {
         currentStep(newValue) {
-            this.index === newValue
-                ? this.isCurrentStep === true
-                : this.isCurrentStep === false;
+            if (newValue >= 0) {
+                this.index === newValue
+                    ? this.isCurrentStep === true
+                    : this.isCurrentStep === false;
+            }
         },
     },
-    computed: mapGetters(['currentStep']),
+    computed: mapGetters(["currentStep"]),
     methods: {
         onAddStep() {
             this.$emit("on-add-step", this.index);

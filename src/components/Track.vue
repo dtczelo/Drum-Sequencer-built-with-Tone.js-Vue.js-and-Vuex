@@ -80,10 +80,10 @@ import { mapGetters } from 'vuex'
 import RoundSlider from "vue-round-slider";
 import Switches from 'vue-switches';
 
-import kick from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
-import clap from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
-import hh from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808OHH.wav";
-import s from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
+// import kick from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
+// import clap from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
+// import hh from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
+// import s from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
 
 export default {
     components: {
@@ -108,7 +108,9 @@ export default {
     watch: {
         currentStep: {
             handler(newValue) {
+                if (newValue >= 0) {
                 this.track[newValue].active === true && this.playSound();
+                }
             },
             deep: true,
         },
@@ -128,7 +130,6 @@ export default {
             this.$emit("change-track", this.trackNumber);
         },
         playSound() {
-            this.trackSample.stop();
             this.$tone.loaded().then(() => {
                 this.trackSample.start(this.$store.state.mainClock);
             });
@@ -138,19 +139,19 @@ export default {
     mounted() {
         switch (this.trackNumber) {
             case 0:
-                this.trackSample = new this.$tone.Player(kick).toDestination();
+                this.trackSample = this.$store.state.track1;
                 break;
 
             case 1:
-                this.trackSample = new this.$tone.Player(clap).toDestination();
+                this.trackSample = this.$store.state.track2;
                 break;
 
             case 2:
-                this.trackSample = new this.$tone.Player(hh).toDestination();
+                this.trackSample = this.$store.state.track3;
                 break;
 
             case 3:
-                this.trackSample = new this.$tone.Player(s).toDestination();
+                this.trackSample = this.$store.state.track4;
                 break;
             default:
                 break;

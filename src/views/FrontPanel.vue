@@ -1,6 +1,12 @@
 <template>
-    <div class="front-panel" @keyup.space="isPlaying === true ? onStopTransport() : onStartTransport()" tabindex="0">
-        <div class="tracks" >
+    <div
+        class="front-panel"
+        @keyup.space.prevent="
+            isPlaying ? onStopTransport() : onStartTransport()
+        "
+        tabindex="0"
+    >
+        <div class="tracks">
             <Track
                 v-for="(track, index) in tracks"
                 :track="track"
@@ -20,6 +26,7 @@
                 v-for="(step, index) in trackToRender"
                 :key="step.id"
                 :index="index"
+                :isPlaying="isPlaying"
                 :active="step.active"
                 :currentTrack="step.trackNumber"
                 @on-add-step="onAddStep"
@@ -134,8 +141,8 @@ export default {
         },
         onStopTransport() {
             this.$tone.Transport.stop();
-            this.scheduleTick = 0;
             this.isPlaying = false;
+            this.$store.commit("resetScheduleTick");
         },
         // Events from Step
         onAddStep(selectedStep) {
@@ -229,10 +236,14 @@ export default {
         }
     }
     &__controls {
+        display: flex;
         & > * {
             font-size: 1.2rem;
             color: var(--secondary-color);
             margin-right: 10px;
+        }
+        &--play {
+            font-size: 1.05rem;
         }
     }
     &__dots {
