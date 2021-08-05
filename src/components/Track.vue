@@ -33,7 +33,7 @@
                 class="track__slider"
                 v-model="fadeSlider"
                 max="1"
-                min="0"
+                min="0.1"
                 step="0.05"
                 handleSize="10"
                 start-angle="340"
@@ -56,8 +56,9 @@
             <round-slider
                 class="track__slider"
                 v-model="panSlider"
-                max="127"
-                step="1"
+                max="1"
+                min="-1"
+                step="0.1"
                 handleSize="10"
                 start-angle="340"
                 end-angle="+220"
@@ -80,11 +81,6 @@ import { mapGetters } from 'vuex'
 import RoundSlider from "vue-round-slider";
 import Switches from 'vue-switches';
 
-// import kick from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
-// import clap from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
-// import hh from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
-// import s from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
-
 export default {
     components: {
         RoundSlider,
@@ -101,7 +97,7 @@ export default {
             volumeSlider: -6,
             fadeSlider: 127,
             isReversed: false,
-            panSlider: 64,
+            panSlider: 0,
             trackSample: null,
         };
     },
@@ -122,6 +118,9 @@ export default {
         },
         isReversed() {
             this.trackSample.reverse = this.isReversed;
+        },
+        panSlider(newValue) {
+            this.$store.commit("onChangeTrackPan", { currentTrack: this.currentTrack, value: newValue })
         }
     },
     computed: mapGetters(['currentStep']),

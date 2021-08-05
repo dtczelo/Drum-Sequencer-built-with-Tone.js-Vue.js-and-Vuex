@@ -36,7 +36,7 @@ export default {
     computed: mapGetters(["currentStep"]),
     methods: {
         onAddStep() {
-            this.$emit("on-add-step", this.index);
+            this.$store.commit("onAddStep", { selectedStep: this.index, currentTrack: this.currentTrack });
             this.isActive = !this.isActive;
         },
     },

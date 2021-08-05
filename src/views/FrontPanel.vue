@@ -8,7 +8,7 @@
     >
         <div class="tracks">
             <Track
-                v-for="(track, index) in tracks"
+                v-for="(track, index) in allTracks"
                 :track="track"
                 :key="index"
                 :currentTrack="currentTrack"
@@ -29,21 +29,23 @@
                 :isPlaying="isPlaying"
                 :active="step.active"
                 :currentTrack="step.trackNumber"
-                @on-add-step="onAddStep"
                 class="steps__step"
                 >{{ (index += 1) }}
             </Step>
         </div>
         <div class="transport">
             <div class="transport__tempo">
-                <button @click="tempo--" class="transport__tempo--increment">
+                <button
+                    @click.prevent="decrementTempo"
+                    class="transport__tempo--increment"
+                >
                     <i class="fas fa-minus"></i>
                 </button>
                 <div class="transport__tempo--display">
                     <p>{{ tempo }}</p>
                 </div>
                 <button
-                    @click.prevent="tempo++"
+                    @click.prevent="incrementTempo"
                     class="transport__tempo--increment"
                 >
                     <i class="fas fa-plus"></i>
@@ -115,22 +117,21 @@ export default {
     },
     data() {
         return {
-            tempo: 90,
             isPlaying: false,
             currentMeasure: 0,
             numberOfTracks: 4,
-            tracks: [],
             currentTrack: 0,
         };
     },
-    watch: {
-        tempo(newValue) {
-            this.$tone.Transport.bpm.value = newValue;
-        },
-    },
     computed: {
+        tempo() {
+            return this.$store.state.tempo;
+        },
+        allTracks() {
+            return this.$store.state.tracksDATA;
+        },
         trackToRender() {
-            return this.tracks[this.currentTrack];
+            return this.$store.state.tracksDATA[this.currentTrack];
         },
     },
     methods: {
@@ -144,18 +145,18 @@ export default {
             this.isPlaying = false;
             this.$store.commit("resetScheduleTick");
         },
-        // Events from Step
-        onAddStep(selectedStep) {
-            this.tracks[this.currentTrack][selectedStep].active = !this.tracks[
-                this.currentTrack
-            ][selectedStep].active;
-        },
         // Event from track
         onChangeTrack(trackNumber) {
             this.currentTrack = trackNumber;
         },
         // Clock
-        handleClockTime() {
+        incrementTempo() {
+            this.$store.commit("incrementTempo");
+        },
+        decrementTempo() {
+            this.$store.commit("decrementTempo");
+        },
+        sendClockTime() {
             this.$tone.Transport.scheduleRepeat((time) => {
                 this.$store.commit("incrementMainClock", time);
                 this.$store.commit("incrementScheduleTick");
@@ -172,12 +173,12 @@ export default {
                     active: false,
                 })
             );
-            this.tracks.push(filledArray);
+            this.$store.commit("initByTrack", filledArray);
         }
     },
     mounted() {
-        this.$tone.Transport.bpm.value = this.tempo;
-        this.handleClockTime();
+        this.$store.commit("initTempo");
+        this.sendClockTime();
     },
 };
 </script>
