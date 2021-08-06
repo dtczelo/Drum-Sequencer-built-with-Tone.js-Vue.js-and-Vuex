@@ -5,34 +5,38 @@ import * as Tone from "tone";
 Vue.use(Vuex);
 
 import kick from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
+// import kick from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
 import clap from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
+// import clap from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
 import hh from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
+// import hh from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
 import snare from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
+// import snare from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
 
 const initialTempo = 120;
 const allChannelsVolume = 0;
 const masterChannelVolume = 0;
 const masterChannelPan = 0; // Must be within -1 & 1
 
-const distortion1 = new Tone.Distortion(0);
-const distortion2 = new Tone.Distortion(0);
-const distortion3 = new Tone.Distortion(0);
-const distortion4 = new Tone.Distortion(0);
+// const distortion1 = new Tone.Distortion(0);
+// const distortion2 = new Tone.Distortion(0);
+// const distortion3 = new Tone.Distortion(0);
+// const distortion4 = new Tone.Distortion(0);
 
-const HPF1 = new Tone.Filter(0, "highpass");
-const HPF2 = new Tone.Filter(0, "highpass");
-const HPF3 = new Tone.Filter(0, "highpass");
-const HPF4 = new Tone.Filter(0, "highpass");
+// const HPF1 = new Tone.Filter(0, "highpass");
+// const HPF2 = new Tone.Filter(0, "highpass");
+// const HPF3 = new Tone.Filter(0, "highpass");
+// const HPF4 = new Tone.Filter(0, "highpass");
 
-const LPF1 = new Tone.Filter(20000, "lowpass");
-const LPF2 = new Tone.Filter(20000, "lowpass");
-const LPF3 = new Tone.Filter(20000, "lowpass");
-const LPF4 = new Tone.Filter(20000, "lowpass");
+// const LPF1 = new Tone.Filter(20000, "lowpass");
+// const LPF2 = new Tone.Filter(20000, "lowpass");
+// const LPF3 = new Tone.Filter(20000, "lowpass");
+// const LPF4 = new Tone.Filter(20000, "lowpass");
 
-const feedbackDelay1 = new Tone.FeedbackDelay("8n", 0);
-const feedbackDelay2 = new Tone.FeedbackDelay("8n", 0);
-const feedbackDelay3 = new Tone.FeedbackDelay("8n", 0);
-const feedbackDelay4 = new Tone.FeedbackDelay("8n", 0);
+// const feedbackDelay1 = new Tone.FeedbackDelay("8n", 0);
+// const feedbackDelay2 = new Tone.FeedbackDelay("8n", 0);
+// const feedbackDelay3 = new Tone.FeedbackDelay("8n", 0);
+// const feedbackDelay4 = new Tone.FeedbackDelay("8n", 0);
 
 const limiter = new Tone.Limiter(-6).toDestination();
 
@@ -74,34 +78,34 @@ export default new Vuex.Store({
         tracksDATA: [],
         tempo: initialTempo,
         track1: new Tone.Player(kick).chain(
-            distortion1,
-            LPF1,
-            HPF1,
-            feedbackDelay1,
+            // distortion1,
+            // LPF1,
+            // HPF1,
+            // feedbackDelay1,
             channel1,
             masterChannel
         ),
         track2: new Tone.Player(clap).chain(
-            distortion2,
-            LPF2,
-            HPF2,
-            feedbackDelay2,
+            // distortion2,
+            // LPF2,
+            // HPF2,
+            // feedbackDelay2,
             channel2,
             masterChannel
         ),
         track3: new Tone.Player(hh).chain(
-            distortion3,
-            LPF3,
-            HPF3,
-            feedbackDelay3,
+            // distortion3,
+            // LPF3,
+            // HPF3,
+            // feedbackDelay3,
             channel3,
             masterChannel
         ),
         track4: new Tone.Player(snare).chain(
-            distortion4,
-            LPF4,
-            HPF4,
-            feedbackDelay4,
+            // distortion4,
+            // LPF4,
+            // HPF4,
+            // feedbackDelay4,
             channel4,
             masterChannel
         ),
@@ -118,6 +122,9 @@ export default new Vuex.Store({
         },
         incrementScheduleTick(state) {
             state.scheduleTick++;
+        },
+        decrementScheduleTick(state) {
+            state.scheduleTick -= 4;
         },
         resetScheduleTick(state) {
             state.scheduleTick = -1;

@@ -52,10 +52,18 @@
                 </button>
             </div>
             <div class="transport__controls">
-                <button class="transport__controls--back">
+                <button
+                    @click.prevent="onBackwardTransport"
+                    :class="{ active: isBackwarding }"
+                    class="transport__controls--back"
+                >
                     <i class="fas fa-fast-backward"></i>
                 </button>
-                <button class="transport__controls--for">
+                <button
+                    @click.prevent="onForwardTransport"
+                    :class="{ active: isForwarding }"
+                    class="transport__controls--for"
+                >
                     <i class="fas fa-fast-forward"></i>
                 </button>
                 <button
@@ -118,6 +126,8 @@ export default {
     data() {
         return {
             isPlaying: false,
+            isForwarding: false,
+            isBackwarding: false,
             currentMeasure: 0,
             numberOfTracks: 4,
             currentTrack: 0,
@@ -144,6 +154,20 @@ export default {
             this.$tone.Transport.stop();
             this.isPlaying = false;
             this.$store.commit("resetScheduleTick");
+        },
+        onBackwardTransport() {
+            this.$store.commit("decrementScheduleTick");
+            this.isBackwarding = true;
+            setTimeout(() => {
+                this.isBackwarding = false;
+            }, 100);
+        },
+        onForwardTransport() {
+            this.$store.commit("incrementScheduleTick");
+            this.isForwarding = true;
+            setTimeout(() => {
+                this.isForwarding = false;
+            }, 100);
         },
         // Event from track
         onChangeTrack(trackNumber) {
