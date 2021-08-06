@@ -37,7 +37,7 @@ html {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     background-color: var(--bg-color);
-    color: #2c3e50;
+    color: var(--secondary-color);
     width: 100%;
     height: 100vh;
 

@@ -41,17 +41,13 @@ const masterChannelPan = 0; // Must be within -1 & 1
 const limiter = new Tone.Limiter(-6).toDestination();
 
 // Sends effects
-const chorus = new Tone.Chorus({
-    wet: 1,
-})
-    .connect(limiter)
-    .start();
+const chorus = new Tone.Chorus({ wet: 1 }).connect(limiter);
 const chorusChannel = new Tone.Channel({ volume: -60 }).connect(chorus);
 chorusChannel.receive("chorus");
 
-const cheby = new Tone.Chebyshev(50).connect(limiter);
-const chebyChannel = new Tone.Channel({ volume: -60 }).connect(cheby);
-chebyChannel.receive("cheby");
+const delay = new Tone.FeedbackDelay("12n", 0.5).connect(limiter);
+const delayChannel = new Tone.Channel({ volume: -60 }).connect(delay);
+delayChannel.receive("delay");
 
 const reverb = new Tone.Reverb(3).connect(limiter);
 const reverbChannel = new Tone.Channel({ volume: -60 }).connect(reverb);
@@ -65,7 +61,7 @@ const channel4 = new Tone.Channel(allChannelsVolume, 0);
 
 const masterChannel = new Tone.Channel(masterChannelVolume, masterChannelPan);
 masterChannel.send("chorus");
-masterChannel.send("cheby");
+masterChannel.send("delay");
 masterChannel.send("reverb");
 masterChannel.connect(limiter);
 
@@ -112,7 +108,10 @@ export default new Vuex.Store({
     },
     getters: {
         currentStep: (state) => {
-            return state.scheduleTick % (state.numberOfSteps * state.numberOfMeasures);
+            return (
+                state.scheduleTick %
+                (state.numberOfSteps * state.numberOfMeasures)
+            );
         },
     },
     mutations: {
@@ -153,7 +152,7 @@ export default new Vuex.Store({
         },
         // TRACK PARAMETERS
         onChangeTrackPan(state, payload) {
-            // Works but maybe channels are in mono so routing to master stereo cancel panning ? 
+            // Works but maybe channels are in mono so routing to master stereo cancel panning ?
             switch (payload.currentTrack) {
                 case 0:
                     channel1.pan.value = payload.value;
@@ -168,6 +167,18 @@ export default new Vuex.Store({
                     channel4.pan.value = payload.value;
                     break;
             }
+        },
+        onChangeMasterChorusSend(state, value) {
+            chorusChannel.volume.value = value;
+        },
+        onChangeMasterDelaySend(state, value) {
+            delayChannel.volume.value = value;
+        },
+        onChangeMasterReverbSend(state, value) {
+            reverbChannel.volume.value = value;
+        },
+        onChangeMasterVolume(state, value) {
+            masterChannel.volume.value = value;
         },
     },
     actions: {},

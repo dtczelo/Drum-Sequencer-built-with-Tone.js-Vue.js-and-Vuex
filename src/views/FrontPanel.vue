@@ -18,7 +18,10 @@
                 Tr. {{ (index += 1) }}
             </Track>
         </div>
-        <hr />
+        <div class="master-section">
+            <Master/>
+        </div>
+        <!-- <hr /> -->
         <div class="effects"></div>
         <div class="steps">
             <Step
@@ -117,11 +120,13 @@
 <script>
 import Step from "../components/Step.vue";
 import Track from "../components/Track.vue";
+import Master from "../components/Master.vue";
 
 export default {
     components: {
         Step,
         Track,
+        Master
     },
     data() {
         return {
@@ -175,10 +180,10 @@ export default {
         },
         // Clock
         incrementTempo() {
-            this.$store.commit("incrementTempo");
+            (this.tempo < 300) && this.$store.commit("incrementTempo");
         },
         decrementTempo() {
-            this.$store.commit("decrementTempo");
+            (this.tempo > 10) && this.$store.commit("decrementTempo");
         },
         sendClockTime() {
             this.$tone.Transport.scheduleRepeat((time) => {
@@ -209,9 +214,15 @@ export default {
 
 <style lang="scss">
 .front-panel {
+    display: grid;
+    grid-template-areas: "tracks tracks tracks master"
+                         "effects effects effects effects"
+                         "steps steps steps steps"
+                         "transport transport transport transport";
 }
 
 .tracks {
+    grid-area: tracks;
     height: 40vh;
     width: min(90%, 1800px);
     margin: 0 auto;
@@ -222,11 +233,13 @@ export default {
 }
 
 .effects {
+    grid-area: effects;
     height: 30vh;
     width: 100%;
 }
 
 .steps {
+    grid-area: steps;
     height: 10vh;
     width: min(90%, 1800px);
     margin: 0 auto;
@@ -245,6 +258,7 @@ export default {
 }
 
 .transport {
+    grid-area: transport;
     height: 5vh;
     width: min(90%, 1800px);
     margin: 0 auto;
