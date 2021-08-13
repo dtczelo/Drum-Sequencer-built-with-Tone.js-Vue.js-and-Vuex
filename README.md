@@ -3,6 +3,8 @@
 Drum Sequencer built with Tone.js, Vue.js and Vuex.  
 Vuex handle clock, sounds routing and sequencer data.
 
+![Front panel](./src/assets/Front.jpg)
+
 ## Project setup
 ```
 npm install
