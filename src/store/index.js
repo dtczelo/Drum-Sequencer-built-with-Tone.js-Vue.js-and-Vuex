@@ -5,18 +5,39 @@ import * as Tone from "tone";
 Vue.use(Vuex);
 
 import kick from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
-// import kick from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
 import clap from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
-// import clap from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
 import hh from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
-// import hh from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
 import snare from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
-// import snare from "D:/WEB/Machinery_Vue/app/src/assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
 
 const initialTempo = 120;
 const allChannelsVolume = 0;
 const masterChannelVolume = 0;
 const masterChannelPan = 0; // Must be within -1 & 1
+
+// const ampEnv1 = new Tone.AmplitudeEnvelope({ 
+//     attack: 0,
+//     decay: 1,
+//     sustain: 1,
+//     release: 1
+//  });
+// const ampEnv2 = new Tone.AmplitudeEnvelope({ 
+//     attack: 0,
+//     decay: 0,
+//     sustain: 1,
+//     release: 0.1
+//  });
+// const ampEnv3 = new Tone.AmplitudeEnvelope({ 
+//     attack: 0,
+//     decay: 0,
+//     sustain: 1,
+//     release: 0.1
+//  });
+// const ampEnv4 = new Tone.AmplitudeEnvelope({ 
+//     attack: 0,
+//     decay: 0,
+//     sustain: 1,
+//     release: 0.1
+//  });
 
 // const distortion1 = new Tone.Distortion(0);
 // const distortion2 = new Tone.Distortion(0);
@@ -40,19 +61,6 @@ const masterChannelPan = 0; // Must be within -1 & 1
 
 const limiter = new Tone.Limiter(-6).toDestination();
 
-// Sends effects
-const chorus = new Tone.Chorus({ wet: 1 }).connect(limiter);
-const chorusChannel = new Tone.Channel({ volume: -60 }).connect(chorus);
-chorusChannel.receive("chorus");
-
-const delay = new Tone.FeedbackDelay("12n", 0.5).connect(limiter);
-const delayChannel = new Tone.Channel({ volume: -60 }).connect(delay);
-delayChannel.receive("delay");
-
-const reverb = new Tone.Reverb(3).connect(limiter);
-const reverbChannel = new Tone.Channel({ volume: -60 }).connect(reverb);
-reverbChannel.receive("reverb");
-
 // Channels & Master section
 const channel1 = new Tone.Channel(allChannelsVolume, 0);
 const channel2 = new Tone.Channel(allChannelsVolume, 0);
@@ -60,20 +68,34 @@ const channel3 = new Tone.Channel(allChannelsVolume, 0);
 const channel4 = new Tone.Channel(allChannelsVolume, 0);
 
 const masterChannel = new Tone.Channel(masterChannelVolume, masterChannelPan);
-masterChannel.send("chorus");
-masterChannel.send("delay");
-masterChannel.send("reverb");
+
 masterChannel.connect(limiter);
+
+// Sends effects
+// const chorus = new Tone.Chorus({ wet: 1 }).connect(limiter);
+// const chorusChannel = new Tone.Channel({ volume: 0 }).connect(chorus);
+// chorusChannel.receive("chorus");
+
+// const delay = new Tone.FeedbackDelay("12n", 0.5).connect(limiter);
+// const delayChannel = new Tone.Channel({ volume: 0 }).connect(delay);
+// delayChannel.receive("delay");
+
+// const reverb = new Tone.Reverb(3).connect(limiter);
+// const reverbChannel = new Tone.Channel({ volume: 0 }).connect(reverb);
+// reverbChannel.receive("reverb");
 
 export default new Vuex.Store({
     state: {
+        toTheMoonMod: false,
         mainClock: 0,
         scheduleTick: -1,
         numberOfMeasures: 1,
+        currentMeasure: 0,
         numberOfSteps: 16,
         tracksDATA: [],
         tempo: initialTempo,
         track1: new Tone.Player(kick).chain(
+            // ampEnv1,
             // distortion1,
             // LPF1,
             // HPF1,
@@ -82,6 +104,7 @@ export default new Vuex.Store({
             masterChannel
         ),
         track2: new Tone.Player(clap).chain(
+            // ampEnv2,
             // distortion2,
             // LPF2,
             // HPF2,
@@ -90,6 +113,7 @@ export default new Vuex.Store({
             masterChannel
         ),
         track3: new Tone.Player(hh).chain(
+            // ampEnv3,
             // distortion3,
             // LPF3,
             // HPF3,
@@ -98,6 +122,7 @@ export default new Vuex.Store({
             masterChannel
         ),
         track4: new Tone.Player(snare).chain(
+            // ampEnv4,
             // distortion4,
             // LPF4,
             // HPF4,
@@ -107,6 +132,11 @@ export default new Vuex.Store({
         ),
     },
     getters: {
+        totalOfSteps: (state) => {
+            return (
+                state.numberOfMeasures * state.numberOfSteps
+            );
+        },
         currentStep: (state) => {
             return (
                 state.scheduleTick %
@@ -115,6 +145,10 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        // MOD
+        toggleToTheMoonMod(state) {
+            state.toTheMoonMod = !state.toTheMoonMod; 
+        },
         // CLOCK
         incrementMainClock(state, time) {
             state.mainClock = time;
@@ -168,15 +202,20 @@ export default new Vuex.Store({
                     break;
             }
         },
-        onChangeMasterChorusSend(state, value) {
-            chorusChannel.volume.value = value;
-        },
-        onChangeMasterDelaySend(state, value) {
-            delayChannel.volume.value = value;
-        },
-        onChangeMasterReverbSend(state, value) {
-            reverbChannel.volume.value = value;
-        },
+        // SEND PARAMETERS
+        // onChangeTrackSend(state, payload) {
+        //     channel1.send(payload.sendType, payload.value);
+        // },
+        // onChangeMasterChorusSend(state, value) {
+        //     chorusChannel.volume.value = value;
+        // },
+        // onChangeMasterDelaySend(state, value) {
+        //     delayChannel.volume.value = value;
+        // },
+        // onChangeMasterReverbSend(state, value) {
+        //     reverbChannel.volume.value = value;
+        // },
+        // MASTER PARAMETERS
         onChangeMasterVolume(state, value) {
             masterChannel.volume.value = value;
         },

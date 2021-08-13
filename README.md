@@ -1,4 +1,7 @@
-# app
+# Machinery
+
+Drum Sequencer built with Tone.js, Vue.js and Vuex.  
+Vuex handle clock, sounds routing and sequencer data.
 
 ## Project setup
 ```

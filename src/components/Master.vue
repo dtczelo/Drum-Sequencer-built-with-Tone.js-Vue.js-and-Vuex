@@ -3,85 +3,91 @@
         <div class="master__title">
             <p>MASTER</p>
         </div>
-        <div class="master__knob">
-            <p class="master__knob-label">Chorus Send</p>
-            <round-slider
-                class="master__slider"
-                v-model="chorusSlider"
-                max="0"
-                min="-60"
-                step="1"
-                handleSize="10"
-                start-angle="340"
-                end-angle="+300"
-                line-cap="butt"
-                radius="25"
-                width="4"
-                showTooltip="false"
-                tooltipColor="#402e32"
-                rangeColor="#ff6f00"
-                pathColor="#b5876d"
-            />
+        <p class="master__sub-title">Effects</p>
+        <div class="master__section">
+            <div class="master__knob">
+                <p class="master__knob-label">Chorus Fb.</p>
+                <round-slider
+                    class="master__slider"
+                    v-model="chorusSlider"
+                    max="0"
+                    min="-60"
+                    step="1"
+                    handleSize="10"
+                    start-angle="340"
+                    end-angle="+300"
+                    line-cap="butt"
+                    radius="25"
+                    width="4"
+                    showTooltip="false"
+                    tooltipColor="#402e32"
+                    rangeColor="#ff6f00"
+                    pathColor="#b5876d"
+                />
+            </div>
+            <div class="master__knob">
+                <p class="master__knob-label">Delay Fb.</p>
+                <round-slider
+                    class="master__slider"
+                    v-model="delaySlider"
+                    max="0"
+                    min="-60"
+                    step="1"
+                    handleSize="10"
+                    start-angle="340"
+                    end-angle="+300"
+                    line-cap="butt"
+                    radius="25"
+                    width="4"
+                    showTooltip="false"
+                    tooltipColor="#402e32"
+                    rangeColor="#ff6f00"
+                    pathColor="#b5876d"
+                />
+            </div>
+            <div class="master__knob">
+                <p class="master__knob-label">Reverb Size</p>
+                <round-slider
+                    class="master__slider"
+                    v-model="reverbSlider"
+                    max="0"
+                    min="-60"
+                    step="1"
+                    handleSize="10"
+                    start-angle="340"
+                    end-angle="+300"
+                    line-cap="butt"
+                    radius="25"
+                    width="4"
+                    showTooltip="false"
+                    tooltipColor="#402e32"
+                    rangeColor="#ff6f00"
+                    pathColor="#b5876d"
+                />
+            </div>
         </div>
-        <div class="master__knob">
-            <p class="master__knob-label">Delay Send</p>
-            <round-slider
-                class="master__slider"
-                v-model="delaySlider"
-                max="0"
-                min="-60"
-                step="1"
-                handleSize="10"
-                start-angle="340"
-                end-angle="+300"
-                line-cap="butt"
-                radius="25"
-                width="4"
-                showTooltip="false"
-                tooltipColor="#402e32"
-                rangeColor="#ff6f00"
-                pathColor="#b5876d"
-            />
-        </div>
-        <div class="master__knob">
-            <p class="master__knob-label">Reverb Send</p>
-            <round-slider
-                class="master__slider"
-                v-model="reverbSlider"
-                max="0"
-                min="-60"
-                step="1"
-                handleSize="10"
-                start-angle="340"
-                end-angle="+300"
-                line-cap="butt"
-                radius="25"
-                width="4"
-                showTooltip="false"
-                tooltipColor="#402e32"
-                rangeColor="#ff6f00"
-                pathColor="#b5876d"
-            />
-        </div>
-        <div class="master__knob">
-            <p class="master__knob-label">Master Vol.</p>
-            <round-slider
-                class="master__slider"
-                v-model="volSlider"
-                max="0"
-                min="-60"
-                step="1"
-                handleSize="10"
-                start-angle="340"
-                end-angle="+300"
-                line-cap="butt"
-                radius="25"
-                width="4"
-                showTooltip="false"
-                tooltipColor="#402e32"
-                rangeColor="#ff6f00"
-                pathColor="#b5876d"
-            />
+        <p class="master__sub-title">Amp.</p>
+        <div class="master__section">
+            <div class="master__knob">
+                <p class="master__knob-label">Master Vol.</p>
+                <round-slider
+                    class="master__slider"
+                    v-model="volSlider"
+                    max="0"
+                    min="-60"
+                    step="1"
+                    handleSize="10"
+                    start-angle="340"
+                    end-angle="+300"
+                    line-cap="butt"
+                    radius="25"
+                    width="4"
+                    showTooltip="false"
+                    tooltipColor="#402e32"
+                    rangeColor="#ff6f00"
+                    pathColor="#b5876d"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -102,15 +108,15 @@ export default {
         };
     },
     watch: {
-        chorusSlider(newValue) {
-            this.$store.commit("onChangeMasterChorusSend", newValue);
-        },
-        delaySlider(newValue) {
-            this.$store.commit("onChangeMasterDelaySend", newValue);
-        },
-        reverbSlider(newValue) {
-            this.$store.commit("onChangeMasterReverbSend", newValue);
-        },
+        // chorusSlider(newValue) {
+        //     this.$store.commit("onChangeMasterChorusSend", newValue);
+        // },
+        // delaySlider(newValue) {
+        //     this.$store.commit("onChangeMasterDelaySend", newValue);
+        // },
+        // reverbSlider(newValue) {
+        //     this.$store.commit("onChangeMasterReverbSend", newValue);
+        // },
         volSlider(newValue) {
             this.$store.commit("onChangeMasterVolume", newValue);
         },
@@ -124,9 +130,15 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    &__section {
+        display: flex;
+        justify-content: space-between;
+    }
     &__title {
         font-weight: 600;
+    }
+    &__sub-title {
+        text-align: left;
     }
     &__btn {
         padding: 0.5rem 1rem;

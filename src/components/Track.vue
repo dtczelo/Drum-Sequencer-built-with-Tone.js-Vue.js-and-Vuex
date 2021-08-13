@@ -72,19 +72,82 @@
                 disabled="true"
             />
         </div>
+        <div class="track__knob">
+            <p class="track__knob-label">Chorus send</p>
+            <round-slider
+                class="track__slider"
+                v-model="chorusSend"
+                max="0"
+                min="-60"
+                step="1"
+                handleSize="10"
+                start-angle="340"
+                end-angle="+300"
+                line-cap="butt"
+                radius="25"
+                width="4"
+                showTooltip="false"
+                tooltipColor="#402e32"
+                rangeColor="#ff6f00"
+                pathColor="#b5876d"
+                disabled="true"
+            />
+        </div>
+        <div class="track__knob">
+            <p class="track__knob-label">Delay send</p>
+            <round-slider
+                class="track__slider"
+                v-model="delaySend"
+                max="0"
+                min="-60"
+                step="1"
+                handleSize="10"
+                start-angle="340"
+                end-angle="+300"
+                line-cap="butt"
+                radius="25"
+                width="4"
+                showTooltip="false"
+                tooltipColor="#402e32"
+                rangeColor="#ff6f00"
+                pathColor="#b5876d"
+                disabled="true"
+            />
+        </div>
+        <div class="track__knob">
+            <p class="track__knob-label">Reverb Send</p>
+            <round-slider
+                class="track__slider"
+                v-model="reverbSend"
+                max="0"
+                min="-60"
+                step="1"
+                handleSize="10"
+                start-angle="340"
+                end-angle="+300"
+                line-cap="butt"
+                radius="25"
+                width="4"
+                showTooltip="false"
+                tooltipColor="#402e32"
+                rangeColor="#ff6f00"
+                pathColor="#b5876d"
+                disabled="true"
+            />
+        </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 import RoundSlider from "vue-round-slider";
-import Switches from 'vue-switches';
+import Switches from "vue-switches";
 
 export default {
     components: {
         RoundSlider,
-        Switches
+        Switches,
     },
     props: {
         tracksSamplesPaths: Array,
@@ -98,6 +161,9 @@ export default {
             fadeSlider: 127,
             isReversed: false,
             panSlider: 0,
+            chorusSend: -60,
+            delaySend: -60,
+            reverbSend: -60,
             trackSample: null,
         };
     },
@@ -105,7 +171,7 @@ export default {
         currentStep: {
             handler(newValue) {
                 if (newValue >= 0) {
-                this.track[newValue].active === true && this.playSound();
+                    this.track[newValue].active === true && this.playSound();
                 }
             },
             deep: true,
@@ -120,10 +186,34 @@ export default {
             this.trackSample.reverse = this.isReversed;
         },
         panSlider(newValue) {
-            this.$store.commit("onChangeTrackPan", { currentTrack: this.currentTrack, value: newValue })
-        }
+            this.$store.commit("onChangeTrackPan", {
+                currentTrack: this.currentTrack,
+                value: newValue,
+            });
+        },
+        // chorusSend(newValue) {
+        //     this.$store.commit("onChangeTrackSend", {
+        //         trackNumber: this.trackNumber,
+        //         sendType: "chorus",
+        //         value: newValue,
+        //     });
+        // },
+        // delaySend(newValue) {
+        //     this.$store.commit("onChangeTrackSend", {
+        //         trackNumber: this.trackNumber,
+        //         sendType: "delay",
+        //         value: newValue,
+        //     });
+        // },
+        // reverbSend(newValue) {
+        //     this.$store.commit("onChangeTrackSend", {
+        //         trackNumber: this.trackNumber,
+        //         sendType: "reverb",
+        //         value: newValue,
+        //     });
+        // },
     },
-    computed: mapGetters(['currentStep']),
+    computed: mapGetters(["currentStep"]),
     methods: {
         changeTrack() {
             this.$emit("change-track", this.trackNumber);
@@ -161,7 +251,7 @@ export default {
 
 <style lang="scss">
 .track {
-    width: 50%;
+    width: 75%;
     display: flex;
     justify-content: space-between;
     align-items: center;

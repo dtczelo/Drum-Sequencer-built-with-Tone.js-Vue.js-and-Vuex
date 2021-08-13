@@ -33,7 +33,9 @@ export default {
             }
         },
     },
-    computed: mapGetters(["currentStep"]),
+    computed: {
+        ...mapGetters(["currentStep"])
+    },
     methods: {
         onAddStep() {
             this.$store.commit("onAddStep", { selectedStep: this.index, currentTrack: this.currentTrack });

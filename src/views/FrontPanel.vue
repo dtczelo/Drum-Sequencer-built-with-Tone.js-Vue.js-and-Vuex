@@ -22,7 +22,9 @@
             <Master/>
         </div>
         <!-- <hr /> -->
-        <div class="effects"></div>
+        <div class="effects">
+            <Effects/>
+        </div>
         <div class="steps">
             <Step
                 ref="sequencer"
@@ -118,22 +120,24 @@
 </template>
 
 <script>
+
 import Step from "../components/Step.vue";
 import Track from "../components/Track.vue";
 import Master from "../components/Master.vue";
+import Effects from "../components/Effects.vue";
 
 export default {
     components: {
         Step,
         Track,
-        Master
+        Master,
+        Effects
     },
     data() {
         return {
             isPlaying: false,
             isForwarding: false,
             isBackwarding: false,
-            currentMeasure: 0,
             numberOfTracks: 4,
             currentTrack: 0,
         };
@@ -148,6 +152,9 @@ export default {
         trackToRender() {
             return this.$store.state.tracksDATA[this.currentTrack];
         },
+        currentMeasure() {
+            return this.$store.state.currentMeasure;
+        }
     },
     methods: {
         // Transport
@@ -195,7 +202,7 @@ export default {
     created() {
         for (let i = 0; i < this.numberOfTracks; i++) {
             const filledArray = Array.from(
-                { length: this.$store.state.numberOfSteps },
+                { length: this.$store.getters.totalOfSteps },
                 () => ({
                     id: this.$uuid(),
                     trackNumber: i,
@@ -230,6 +237,13 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
+}
+
+.master-section {
+    grid-area: master;
+    height: 40vh;
+    width: min(90%, 1800px);
+    margin: 0 auto;
 }
 
 .effects {
