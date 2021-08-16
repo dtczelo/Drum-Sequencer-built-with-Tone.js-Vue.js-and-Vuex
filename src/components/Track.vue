@@ -214,7 +214,7 @@ export default {
         //     });
         // },
     },
-    computed: mapGetters(["currentStepAndMeasure"]),
+    computed: { ...mapGetters(["currentStepAndMeasure"]) },
     methods: {
         changeTrack() {
             this.$emit("change-track", this.trackNumber);

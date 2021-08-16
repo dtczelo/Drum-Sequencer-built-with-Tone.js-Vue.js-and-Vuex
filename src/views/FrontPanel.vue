@@ -98,7 +98,7 @@
                     @click.prevent="onChangeMeasure(0)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 0 }"
+                        :class="{ active: selectedMeasure === 0, runningMeasure: currentStepAndMeasure.measure === 0 }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -107,7 +107,7 @@
                     @click.prevent="onChangeMeasure(1)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 1 }"
+                        :class="{ active: selectedMeasure === 1, runningMeasure: currentStepAndMeasure.measure === 1 }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -116,7 +116,7 @@
                     @click.prevent="onChangeMeasure(2)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 2 }"
+                        :class="{ active: selectedMeasure === 2, runningMeasure: currentStepAndMeasure.measure === 2 }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -125,7 +125,7 @@
                     @click.prevent="onChangeMeasure(3)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 3 }"
+                        :class="{ active: selectedMeasure === 3, runningMeasure: currentStepAndMeasure.measure === 3 }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -135,6 +135,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import Step from "../components/Step.vue";
 import Track from "../components/Track.vue";
 import Master from "../components/Master.vue";
@@ -166,6 +168,7 @@ export default {
         stepsToRender() {
             return this.$store.state.tracksDATA[this.currentTrack][this.selectedMeasure];
         },
+        ...mapGetters(["currentStepAndMeasure"])
     },
     methods: {
         // Transport
@@ -334,5 +337,9 @@ export default {
 
 .active {
     color: var(--primary-color);
+}
+
+.runningMeasure {
+    opacity: 0.5;
 }
 </style>
