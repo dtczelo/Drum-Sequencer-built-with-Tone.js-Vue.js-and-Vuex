@@ -109,11 +109,13 @@ export default {
     --text-color: #fff;
 }
 
+// to the moon
 @mixin sp-layout {
   @media screen and (max-width: 750px) {
     @content;
   }
 }
+//
 
 html {
     font-size: 20px;

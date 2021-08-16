@@ -14,25 +14,25 @@ const allChannelsVolume = 0;
 const masterChannelVolume = 0;
 const masterChannelPan = 0; // Must be within -1 & 1
 
-// const ampEnv1 = new Tone.AmplitudeEnvelope({ 
+// const ampEnv1 = new Tone.AmplitudeEnvelope({
 //     attack: 0,
 //     decay: 1,
 //     sustain: 1,
 //     release: 1
 //  });
-// const ampEnv2 = new Tone.AmplitudeEnvelope({ 
+// const ampEnv2 = new Tone.AmplitudeEnvelope({
 //     attack: 0,
 //     decay: 0,
 //     sustain: 1,
 //     release: 0.1
 //  });
-// const ampEnv3 = new Tone.AmplitudeEnvelope({ 
+// const ampEnv3 = new Tone.AmplitudeEnvelope({
 //     attack: 0,
 //     decay: 0,
 //     sustain: 1,
 //     release: 0.1
 //  });
-// const ampEnv4 = new Tone.AmplitudeEnvelope({ 
+// const ampEnv4 = new Tone.AmplitudeEnvelope({
 //     attack: 0,
 //     decay: 0,
 //     sustain: 1,
@@ -89,10 +89,11 @@ export default new Vuex.Store({
         toTheMoonMod: false,
         mainClock: 0,
         scheduleTick: -1,
-        numberOfTracks: 4,
-        numberOfMeasures: 1,
         currentMeasure: 0,
+        numberOfTracks: 4,
+        numberOfMeasures: 2,
         numberOfSteps: 16,
+        // TracksDATA => Track : Array => Measure : Array => Steps : Array
         tracksDATA: [],
         tempo: initialTempo,
         track1: new Tone.Player(kick).chain(
@@ -134,21 +135,16 @@ export default new Vuex.Store({
     },
     getters: {
         totalOfSteps: (state) => {
-            return (
-                state.numberOfMeasures * state.numberOfSteps
-            );
+            return state.numberOfMeasures * state.numberOfSteps;
         },
-        currentStep: (state) => {
-            return (
-                state.scheduleTick %
-                (state.numberOfSteps * state.numberOfMeasures)
-            );
+        currentStepAndMeasure: (state) => {
+            return {step: state.scheduleTick % state.numberOfSteps , measure: state.currentMeasure};
         },
     },
     mutations: {
         // MOD
         toggleToTheMoonMod(state) {
-            state.toTheMoonMod = !state.toTheMoonMod; 
+            state.toTheMoonMod = !state.toTheMoonMod;
         },
         // CLOCK
         incrementMainClock(state, time) {
@@ -174,16 +170,33 @@ export default new Vuex.Store({
             state.tempo--;
             Tone.Transport.bpm.value = state.tempo;
         },
+        updateMeasure(state) {
+            const currentStep = state.scheduleTick % (state.numberOfSteps * state.numberOfMeasures);
+            if (currentStep < state.numberOfSteps) {
+                state.currentMeasure = 0;
+            } else if (currentStep >= state.numberOfSteps && currentStep < state.numberOfSteps * 2) {
+                state.currentMeasure = 1;
+            } else if (currentStep >= state.numberOfSteps * 2 && currentStep < state.numberOfSteps * 3) {
+                state.currentMeasure = 2;
+            } else {
+                state.currentMeasure = 3
+            }
+        },
         // TRACKS DATA
-        initByTrack(state, filledArray) {
-            state.tracksDATA.push(filledArray);
+        initByTrack(state, filledTrack) {
+            state.tracksDATA.push(filledTrack);
         },
         onAddStep(state, payload) {
-            state.tracksDATA[payload.currentTrack][
+            // console.log(
+            //     state.tracksDATA[payload.currentTrack][payload.currentMeasure][
+            //         payload.selectedStep
+            //     ]
+            // );
+            state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
                 payload.selectedStep
             ].active = !state.tracksDATA[payload.currentTrack][
-                payload.selectedStep
-            ].active;
+                payload.selectedMeasure
+            ][payload.selectedStep].active;
         },
         // TRACK PARAMETERS
         onChangeTrackPan(state, payload) {

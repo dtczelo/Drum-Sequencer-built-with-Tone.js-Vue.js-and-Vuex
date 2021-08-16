@@ -152,6 +152,7 @@ export default {
     props: {
         tracksSamplesPaths: Array,
         currentTrack: Number,
+        selectedMeasure: Number,
         trackNumber: Number,
         track: Array,
     },
@@ -168,10 +169,10 @@ export default {
         };
     },
     watch: {
-        currentStep: {
-            handler(newValue) {
-                if (newValue >= 0) {
-                    this.track[newValue].active === true && this.playSound();
+        currentStepAndMeasure: {
+            handler(payload) {
+                if (payload.step >= 0) {
+                    this.track[this.$store.state.currentMeasure][payload.step].active === true && this.playSound();
                 }
             },
             deep: true,
@@ -185,12 +186,12 @@ export default {
         isReversed() {
             this.trackSample.reverse = this.isReversed;
         },
-        panSlider(newValue) {
-            this.$store.commit("onChangeTrackPan", {
-                currentTrack: this.currentTrack,
-                value: newValue,
-            });
-        },
+        // panSlider(newValue) {
+        //     this.$store.commit("onChangeTrackPan", {
+        //         currentTrack: this.currentTrack,
+        //         value: newValue,
+        //     });
+        // },
         // chorusSend(newValue) {
         //     this.$store.commit("onChangeTrackSend", {
         //         trackNumber: this.trackNumber,
@@ -213,7 +214,7 @@ export default {
         //     });
         // },
     },
-    computed: mapGetters(["currentStep"]),
+    computed: mapGetters(["currentStepAndMeasure"]),
     methods: {
         changeTrack() {
             this.$emit("change-track", this.trackNumber);

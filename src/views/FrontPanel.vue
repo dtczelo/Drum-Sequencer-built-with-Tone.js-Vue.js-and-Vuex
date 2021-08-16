@@ -12,6 +12,7 @@
                 :track="track"
                 :key="index"
                 :currentTrack="currentTrack"
+                :selectedMeasure="selectedMeasure"
                 :trackNumber="index"
                 @change-track="onChangeTrack"
             >
@@ -19,21 +20,23 @@
             </Track>
         </div>
         <div class="master-section">
-            <Master/>
+            <Master />
         </div>
         <!-- <hr /> -->
         <div class="effects">
-            <Effects/>
+            <Effects />
         </div>
         <div class="steps">
             <Step
                 ref="sequencer"
-                v-for="(step, index) in trackToRender"
+                v-for="(step, index) in stepsToRender"
                 :key="step.id"
+                :step="step"
                 :index="index"
                 :isPlaying="isPlaying"
                 :active="step.active"
-                :currentTrack="step.trackNumber"
+                :currentTrack="currentTrack"
+                :selectedMeasure="selectedMeasure"
                 class="steps__step"
                 >{{ (index += 1) }}
             </Step>
@@ -90,37 +93,48 @@
                 </button>
             </div>
             <div class="transport__dots">
-                <div class="transport__dots__dot">
+                <button
+                    class="transport__dots__dot"
+                    @click.prevent="onChangeMeasure(0)"
+                >
                     <i
-                        :class="{ active: currentMeasure === 0 }"
+                        :class="{ active: selectedMeasure === 0 }"
                         class="fas fa-circle"
                     ></i>
-                </div>
-                <div class="transport__dots__dot">
+                </button>
+                <button
+                    class="transport__dots__dot"
+                    @click.prevent="onChangeMeasure(1)"
+                >
                     <i
-                        :class="{ active: currentMeasure === 1 }"
+                        :class="{ active: selectedMeasure === 1 }"
                         class="fas fa-circle"
                     ></i>
-                </div>
-                <div class="transport__dots__dot">
+                </button>
+                <button
+                    class="transport__dots__dot"
+                    @click.prevent="onChangeMeasure(2)"
+                >
                     <i
-                        :class="{ active: currentMeasure === 2 }"
+                        :class="{ active: selectedMeasure === 2 }"
                         class="fas fa-circle"
                     ></i>
-                </div>
-                <div class="transport__dots__dot">
+                </button>
+                <button
+                    class="transport__dots__dot"
+                    @click.prevent="onChangeMeasure(3)"
+                >
                     <i
-                        :class="{ active: currentMeasure === 3 }"
+                        :class="{ active: selectedMeasure === 3 }"
                         class="fas fa-circle"
                     ></i>
-                </div>
+                </button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-
 import Step from "../components/Step.vue";
 import Track from "../components/Track.vue";
 import Master from "../components/Master.vue";
@@ -131,7 +145,7 @@ export default {
         Step,
         Track,
         Master,
-        Effects
+        Effects,
     },
     data() {
         return {
@@ -139,6 +153,7 @@ export default {
             isForwarding: false,
             isBackwarding: false,
             currentTrack: 0,
+            selectedMeasure: 0,
         };
     },
     computed: {
@@ -148,12 +163,9 @@ export default {
         allTracks() {
             return this.$store.state.tracksDATA;
         },
-        trackToRender() {
-            return this.$store.state.tracksDATA[this.currentTrack];
+        stepsToRender() {
+            return this.$store.state.tracksDATA[this.currentTrack][this.selectedMeasure];
         },
-        currentMeasure() {
-            return this.$store.state.currentMeasure;
-        }
     },
     methods: {
         // Transport
@@ -180,35 +192,46 @@ export default {
                 this.isForwarding = false;
             }, 100);
         },
+        onChangeMeasure(value) {
+            this.selectedMeasure = value;
+        },
+        // Data
+        createArrayOfSteps() {
+            return Array.from(
+                { length: this.$store.state.numberOfSteps },
+                () => ({
+                    id: this.$uuid(),
+                    active: false,
+                })
+            );
+        },
         // Event from track
         onChangeTrack(trackNumber) {
             this.currentTrack = trackNumber;
         },
         // Clock
         incrementTempo() {
-            (this.tempo < 300) && this.$store.commit("incrementTempo");
+            this.tempo < 300 && this.$store.commit("incrementTempo");
         },
         decrementTempo() {
-            (this.tempo > 10) && this.$store.commit("decrementTempo");
+            this.tempo > 10 && this.$store.commit("decrementTempo");
         },
         sendClockTime() {
             this.$tone.Transport.scheduleRepeat((time) => {
                 this.$store.commit("incrementMainClock", time);
                 this.$store.commit("incrementScheduleTick");
+                this.$store.commit("updateMeasure");
             }, "16n");
         },
     },
     created() {
+        // Initialized Tracks/steps Data
         for (let i = 0; i < this.$store.state.numberOfTracks; i++) {
-            const filledArray = Array.from(
-                { length: this.$store.getters.totalOfSteps },
-                () => ({
-                    id: this.$uuid(),
-                    trackNumber: i,
-                    active: false,
-                })
+            const filledTrack = Array.from(
+                { length: this.$store.state.numberOfMeasures },
+                () => (this.createArrayOfSteps())
             );
-            this.$store.commit("initByTrack", filledArray);
+            this.$store.commit("initByTrack", filledTrack);
         }
     },
     mounted() {
@@ -221,10 +244,11 @@ export default {
 <style lang="scss">
 .front-panel {
     display: grid;
-    grid-template-areas: "tracks tracks tracks master"
-                         "effects effects effects effects"
-                         "steps steps steps steps"
-                         "transport transport transport transport";
+    grid-template-areas:
+        "tracks tracks tracks master"
+        "effects effects effects effects"
+        "steps steps steps steps"
+        "transport transport transport transport";
 }
 
 .tracks {
@@ -300,8 +324,8 @@ export default {
     }
     &__dots {
         display: flex;
-        color: var(--secondary-color);
         & > * {
+            color: var(--secondary-color);
             font-size: 1.2rem;
             margin-left: 10px;
         }

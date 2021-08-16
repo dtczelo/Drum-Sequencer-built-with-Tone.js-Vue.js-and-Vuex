@@ -3,7 +3,7 @@
         @click.stop="onAddStep"
         :class="{
             active: active,
-            activeStep: currentStep === index && isPlaying,
+            runningStep: currentStepAndMeasure.step === index && isPlaying,
         }"
         class="step"
     >
@@ -16,30 +16,22 @@ import { mapGetters } from "vuex";
 
 export default {
     props: {
+        step: Object,
         index: Number,
         isPlaying: Boolean,
         active: Boolean,
         currentTrack: Number,
+        selectedMeasure: Number
     },
     data() {
         return {};
     },
-    watch: {
-        currentStep(newValue) {
-            if (newValue >= 0) {
-                this.index === newValue
-                    ? this.isCurrentStep === true
-                    : this.isCurrentStep === false;
-            }
-        },
-    },
     computed: {
-        ...mapGetters(["currentStep"])
+        ...mapGetters(["currentStepAndMeasure"])
     },
     methods: {
         onAddStep() {
-            this.$store.commit("onAddStep", { selectedStep: this.index, currentTrack: this.currentTrack });
-            this.isActive = !this.isActive;
+            this.$store.commit("onAddStep", { selectedStep: this.index, selectedMeasure: this.selectedMeasure, currentTrack: this.currentTrack });
         },
     },
 };
@@ -58,7 +50,7 @@ export default {
     color: var(--primary-color);
 }
 
-.activeStep {
+.runningStep {
     border: 2px solid var(--primary-color);
 }
 </style>
