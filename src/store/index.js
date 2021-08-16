@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import * as Tone from "tone";
+import { uuid } from 'uuidv4';
 
 Vue.use(Vuex);
 
@@ -138,13 +139,23 @@ export default new Vuex.Store({
             return state.numberOfMeasures * state.numberOfSteps;
         },
         currentStepAndMeasure: (state) => {
-            return {step: state.scheduleTick % state.numberOfSteps , measure: state.currentMeasure};
+            return {
+                step: state.scheduleTick % state.numberOfSteps,
+                measure: state.currentMeasure,
+            };
         },
     },
     mutations: {
         // MOD
         toggleToTheMoonMod(state) {
             state.toTheMoonMod = !state.toTheMoonMod;
+        },
+        // CONFIG
+        onChangeConfig(state, payload) {
+            if (payload.numberOfSteps)
+                state.numberOfSteps = payload.numberOfSteps;
+            if (payload.numberOfMeasures)
+                state.numberOfMeasures = payload.numberOfMeasures;
         },
         // CLOCK
         incrementMainClock(state, time) {
@@ -171,20 +182,43 @@ export default new Vuex.Store({
             Tone.Transport.bpm.value = state.tempo;
         },
         updateMeasure(state) {
-            const currentStep = state.scheduleTick % (state.numberOfSteps * state.numberOfMeasures);
+            const currentStep =
+                state.scheduleTick %
+                (state.numberOfSteps * state.numberOfMeasures);
             if (currentStep < state.numberOfSteps) {
                 state.currentMeasure = 0;
-            } else if (currentStep >= state.numberOfSteps && currentStep < state.numberOfSteps * 2) {
+            } else if (
+                currentStep >= state.numberOfSteps &&
+                currentStep < state.numberOfSteps * 2
+            ) {
                 state.currentMeasure = 1;
-            } else if (currentStep >= state.numberOfSteps * 2 && currentStep < state.numberOfSteps * 3) {
+            } else if (
+                currentStep >= state.numberOfSteps * 2 &&
+                currentStep < state.numberOfSteps * 3
+            ) {
                 state.currentMeasure = 2;
             } else {
-                state.currentMeasure = 3
+                state.currentMeasure = 3;
             }
         },
         // TRACKS DATA
-        initByTrack(state, filledTrack) {
-            state.tracksDATA.push(filledTrack);
+        initDATA(state) {
+            state.tracksDATA = [];
+            // Initialized steps Data
+            let createArrayOfSteps = () => {
+                return Array.from({ length: state.numberOfSteps }, () => ({
+                    id: uuid(),
+                    active: false,
+                }));
+            }
+            // Initialized Tracks Data
+            for (let i = 0; i < state.numberOfTracks; i++) {
+                const filledTrack = Array.from(
+                    { length: state.numberOfMeasures },
+                    () => createArrayOfSteps()
+                );
+                state.tracksDATA.push(filledTrack);
+            }
         },
         onAddStep(state, payload) {
             // console.log(

@@ -98,7 +98,10 @@
                     @click.prevent="onChangeMeasure(0)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 0, runningMeasure: currentStepAndMeasure.measure === 0 }"
+                        :class="{
+                            active: selectedMeasure === 0,
+                            runningMeasure: currentStepAndMeasure.measure === 0,
+                        }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -107,7 +110,10 @@
                     @click.prevent="onChangeMeasure(1)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 1, runningMeasure: currentStepAndMeasure.measure === 1 }"
+                        :class="{
+                            active: selectedMeasure === 1,
+                            runningMeasure: currentStepAndMeasure.measure === 1,
+                        }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -116,7 +122,10 @@
                     @click.prevent="onChangeMeasure(2)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 2, runningMeasure: currentStepAndMeasure.measure === 2 }"
+                        :class="{
+                            active: selectedMeasure === 2,
+                            runningMeasure: currentStepAndMeasure.measure === 2,
+                        }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -125,7 +134,10 @@
                     @click.prevent="onChangeMeasure(3)"
                 >
                     <i
-                        :class="{ active: selectedMeasure === 3, runningMeasure: currentStepAndMeasure.measure === 3 }"
+                        :class="{
+                            active: selectedMeasure === 3,
+                            runningMeasure: currentStepAndMeasure.measure === 3,
+                        }"
                         class="fas fa-circle"
                     ></i>
                 </button>
@@ -166,9 +178,11 @@ export default {
             return this.$store.state.tracksDATA;
         },
         stepsToRender() {
-            return this.$store.state.tracksDATA[this.currentTrack][this.selectedMeasure];
+            return this.$store.state.tracksDATA[this.currentTrack][
+                this.selectedMeasure
+            ];
         },
-        ...mapGetters(["currentStepAndMeasure"])
+        ...mapGetters(["currentStepAndMeasure"]),
     },
     methods: {
         // Transport
@@ -198,16 +212,6 @@ export default {
         onChangeMeasure(value) {
             this.selectedMeasure = value;
         },
-        // Data
-        createArrayOfSteps() {
-            return Array.from(
-                { length: this.$store.state.numberOfSteps },
-                () => ({
-                    id: this.$uuid(),
-                    active: false,
-                })
-            );
-        },
         // Event from track
         onChangeTrack(trackNumber) {
             this.currentTrack = trackNumber;
@@ -228,14 +232,7 @@ export default {
         },
     },
     created() {
-        // Initialized Tracks/steps Data
-        for (let i = 0; i < this.$store.state.numberOfTracks; i++) {
-            const filledTrack = Array.from(
-                { length: this.$store.state.numberOfMeasures },
-                () => (this.createArrayOfSteps())
-            );
-            this.$store.commit("initByTrack", filledTrack);
-        }
+        this.$store.commit("initDATA");
     },
     mounted() {
         this.$store.commit("initTempo");

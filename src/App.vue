@@ -139,6 +139,7 @@ html {
     color: var(--secondary-color);
     width: 100%;
     height: 100vh;
+    min-width: 1024px;
 
     display: flex;
     flex-direction: column;

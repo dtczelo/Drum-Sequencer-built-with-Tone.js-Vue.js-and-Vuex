@@ -1,5 +1,21 @@
 <template>
     <div class="config">
+        <div class="config__input-item">
+            <label for="numbersOfMeasures">Numbers of measures :</label>
+            <input
+                :placeholder="numberOfMeasures"
+                v-model="measures"
+                type="number"
+            />
+        </div>
+        <div class="config__input-item">
+            <label for="numbersOfSteps">Numbers of steps :</label>
+            <input :placeholder="numberOfSteps" v-model="steps" type="number" />
+        </div>
+        <div class="config__switch-item">
+            <label>To the moon Mod</label>
+            <Switches v-model="toTheMoonMod" />
+        </div>
         <div class="config__switch-item">
             <label>God Mod</label>
             <Switches />
@@ -8,17 +24,10 @@
             <label>Dog Mod</label>
             <Switches />
         </div>
-        <div class="config__input-item">
-            <label for="numbersOfMeasures">Numbers of measures :</label>
-            <input :placeholder="numberOfMeasures" type="number" />
-        </div>
-        <div class="config__input-item">
-            <label for="numbersOfSteps">Numbers of steps :</label>
-            <input :placeholder="numberOfSteps" type="number" />
-        </div>
-        <div class="config__switch-item">
-            <label>To the moon Mod</label>
-            <Switches v-model="toTheMoonMod"/>
+        <div>
+            <button @click.prevent="onSave" class="config__save-btn">
+                SAVE
+            </button>
         </div>
     </div>
 </template>
@@ -32,7 +41,9 @@ export default {
     },
     data() {
         return {
-            toTheMoonMod: false
+            toTheMoonMod: false,
+            measures: null,
+            steps: null,
         };
     },
     computed: {
@@ -46,8 +57,17 @@ export default {
     watch: {
         toTheMoonMod() {
             this.$store.commit("toggleToTheMoonMod");
-        }
-    }
+        },
+    },
+    methods: {
+        onSave() {
+            this.$store.commit("onChangeConfig", {
+                numberOfSteps: this.steps,
+                numberOfMeasures: this.measures,
+            });
+            this.$store.commit("initDATA");
+        },
+    },
 };
 </script>
 
@@ -64,6 +84,13 @@ export default {
     }
     &__input-item {
         text-align: left;
+    }
+    &__save-btn {
+        padding: 0.5rem 1rem;
+        font-size: 1.2rem;
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        border-radius: 4px;
     }
 }
 
