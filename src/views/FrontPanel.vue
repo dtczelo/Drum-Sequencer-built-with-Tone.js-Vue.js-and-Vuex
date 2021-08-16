@@ -256,7 +256,7 @@ export default {
 
 .tracks {
     grid-area: tracks;
-    height: 40vh;
+    height: 35vh;
     width: min(90%, 1800px);
     margin: 0 auto;
     display: flex;
@@ -267,15 +267,16 @@ export default {
 
 .master-section {
     grid-area: master;
-    height: 40vh;
+    height: 35vh;
     width: min(90%, 1800px);
     margin: 0 auto;
 }
 
 .effects {
     grid-area: effects;
-    height: 30vh;
-    width: 100%;
+    width: min(90%, 1800px);
+    height: 40vh;
+    margin: 0 auto;
 }
 
 .steps {
@@ -289,9 +290,9 @@ export default {
     &__step {
         width: 50px;
         height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
         background-color: var(--secondary-color);
         border-radius: 4px;
     }

@@ -52,6 +52,7 @@
             <div class="star"></div>
             <div class="star"></div>
         </div>
+      <!-- <router-link to="/about">About</router-link> -->
         <nav class="nav">
             <div v-if="isConfigDisplayed">
                 <button @click="toggleConfig" class="nav__btn">
@@ -63,8 +64,6 @@
                     <i class="far fa-caret-square-down"></i>
                 </button>
             </div>
-            <!-- <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> -->
         </nav>
         <transition name="translate-config">
             <div class="config-section" v-if="isConfigDisplayed">
@@ -76,7 +75,7 @@
 </template>
 
 <script>
-import Config from "../src/components/Config.vue";
+import Config from "./views/Config.vue";
 
 export default {
     components: {

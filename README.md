@@ -1,3 +1,5 @@
+///// Work in progress /////
+
 # Machinery
 
 Drum Sequencer built with Tone.js, Vue.js, Vuex and can be run with electron.

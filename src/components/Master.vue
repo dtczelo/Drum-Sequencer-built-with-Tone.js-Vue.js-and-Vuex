@@ -179,6 +179,7 @@ export default {
         font-weight: 600;
     }
     &__sub-title {
+        font-size: 0.85rem;
         text-align: left;
     }
     &__btn {
