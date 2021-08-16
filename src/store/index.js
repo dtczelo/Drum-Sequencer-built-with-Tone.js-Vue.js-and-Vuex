@@ -89,6 +89,7 @@ export default new Vuex.Store({
         toTheMoonMod: false,
         mainClock: 0,
         scheduleTick: -1,
+        numberOfTracks: 4,
         numberOfMeasures: 1,
         currentMeasure: 0,
         numberOfSteps: 16,

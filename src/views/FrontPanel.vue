@@ -138,7 +138,6 @@ export default {
             isPlaying: false,
             isForwarding: false,
             isBackwarding: false,
-            numberOfTracks: 4,
             currentTrack: 0,
         };
     },
@@ -200,7 +199,7 @@ export default {
         },
     },
     created() {
-        for (let i = 0; i < this.numberOfTracks; i++) {
+        for (let i = 0; i < this.$store.state.numberOfTracks; i++) {
             const filledArray = Array.from(
                 { length: this.$store.getters.totalOfSteps },
                 () => ({

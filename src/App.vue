@@ -176,6 +176,10 @@ button {
     cursor: pointer;
 }
 
+label {
+  margin: 0 5px;
+}
+
 hr {
     margin: 20px 0;
 }
@@ -194,6 +198,8 @@ hr {
 .translate-config-enter, .translate-config-leave-to {
   transform: translateY(-100%);
 }
+
+// To the moon mod
 
 @function random_range($min, $max) {
   $rand: random();
@@ -295,4 +301,7 @@ hr {
     opacity: 0.6;
   }
 }
+
+// end to the moon mod
+
 </style>

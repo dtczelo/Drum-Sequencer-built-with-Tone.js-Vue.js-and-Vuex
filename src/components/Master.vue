@@ -23,6 +23,7 @@
                     tooltipColor="#402e32"
                     rangeColor="#ff6f00"
                     pathColor="#b5876d"
+                    disabled="true"
                 />
             </div>
             <div class="master__knob">
@@ -43,6 +44,7 @@
                     tooltipColor="#402e32"
                     rangeColor="#ff6f00"
                     pathColor="#b5876d"
+                    disabled="true"
                 />
             </div>
             <div class="master__knob">
@@ -63,6 +65,7 @@
                     tooltipColor="#402e32"
                     rangeColor="#ff6f00"
                     pathColor="#b5876d"
+                    disabled="true"
                 />
             </div>
         </div>
@@ -89,15 +92,44 @@
                 />
             </div>
         </div>
+        <p class="master__sub-title">Swing</p>
+        <div class="master__section">
+            <div class="master__knob">
+                <p class="master__knob-label">Swing int.</p>
+                <round-slider
+                    class="master__slider"
+                    v-model="swingIntSlider"
+                    max="1"
+                    min="0"
+                    step="0.05"
+                    handleSize="10"
+                    start-angle="340"
+                    end-angle="+300"
+                    line-cap="butt"
+                    radius="25"
+                    width="4"
+                    showTooltip="false"
+                    tooltipColor="#402e32"
+                    rangeColor="#ff6f00"
+                    pathColor="#b5876d"
+                />
+            </div>
+            <div class="master__knob">
+                <p class="master__switch-label">Swing sub.</p>
+                <span>8th</span><switches v-model="isSubSwing8th"></switches><span>4th</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import RoundSlider from "vue-round-slider";
+import Switches from "vue-switches";
 
 export default {
     components: {
         RoundSlider,
+        Switches,
     },
     data() {
         return {
@@ -105,9 +137,18 @@ export default {
             delaySlider: -60,
             reverbSlider: -60,
             volSlider: -6,
+            swingIntSlider: 0,
+            isSubSwing8th: false,
         };
     },
     watch: {
+        swingIntSlider(newValue) {
+            this.$tone.Transport.swing = newValue;
+        },
+        isSubSwing8th(newValue) {
+            let newSubdivision = newValue ? "8t" : "4t";
+            this.$tone.Transport.swingSubdivision = newSubdivision;
+        },
         // chorusSlider(newValue) {
         //     this.$store.commit("onChangeMasterChorusSend", newValue);
         // },
@@ -161,6 +202,10 @@ export default {
     }
     &__switch-label {
         font-size: 0.65rem;
+    }
+    & span {
+        font-size: 0.65rem;
+        font-weight: 400;
     }
 }
 </style>
