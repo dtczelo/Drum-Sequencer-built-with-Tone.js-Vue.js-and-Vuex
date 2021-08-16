@@ -1,6 +1,6 @@
 # Machinery
 
-Drum Sequencer built with Tone.js, Vue.js and Vuex.  
+Drum Sequencer built with Tone.js, Vue.js, Vuex and can be run with electron.
 Vuex handle clock, sounds routing and sequencer data.
 
 ![Front panel](./src/assets/Front.jpg)
@@ -12,12 +12,14 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+With Vue : npm run serve
+With electron : npm run electron:serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+With Vue : npm run build
+With electron : npm run electron:build
 ```
 
 ### Lints and fixes files
