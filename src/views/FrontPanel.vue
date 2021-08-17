@@ -81,7 +81,11 @@
                 >
                     <i class="fas fa-stop"></i>
                 </button>
-                <button class="transport__controls--pause">
+                <button
+                    @click="onPauseTransport"
+                    :class="{ active: isPaused }"
+                    class="transport__controls--pause"
+                >
                     <i class="fas fa-pause"></i>
                 </button>
                 <button
@@ -125,6 +129,7 @@ export default {
     data() {
         return {
             isPlaying: false,
+            isPaused: false,
             isForwarding: false,
             isBackwarding: false,
             currentTrack: 0,
@@ -153,10 +158,18 @@ export default {
         onStartTransport() {
             this.$tone.Transport.start();
             this.isPlaying = true;
+            this.isPaused = false;
+        },
+        onPauseTransport() {
+            if (this.isPlaying) {
+                this.$tone.Transport.pause();
+                this.isPaused = true;
+            }
         },
         onStopTransport() {
             this.$tone.Transport.stop();
             this.isPlaying = false;
+            this.isPaused = false;
             this.$store.commit("resetScheduleTick");
         },
         onBackwardTransport() {
