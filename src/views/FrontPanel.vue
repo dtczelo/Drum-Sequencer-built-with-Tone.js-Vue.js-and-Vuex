@@ -93,54 +93,13 @@
                 </button>
             </div>
             <div class="transport__dots">
-                <button
-                    class="transport__dots__dot"
-                    @click.prevent="onChangeMeasure(0)"
-                >
-                    <i
-                        :class="{
-                            active: selectedMeasure === 0,
-                            runningMeasure: currentStepAndMeasure.measure === 0,
-                        }"
-                        class="fas fa-circle"
-                    ></i>
-                </button>
-                <button
-                    class="transport__dots__dot"
-                    @click.prevent="onChangeMeasure(1)"
-                >
-                    <i
-                        :class="{
-                            active: selectedMeasure === 1,
-                            runningMeasure: currentStepAndMeasure.measure === 1,
-                        }"
-                        class="fas fa-circle"
-                    ></i>
-                </button>
-                <button
-                    class="transport__dots__dot"
-                    @click.prevent="onChangeMeasure(2)"
-                >
-                    <i
-                        :class="{
-                            active: selectedMeasure === 2,
-                            runningMeasure: currentStepAndMeasure.measure === 2,
-                        }"
-                        class="fas fa-circle"
-                    ></i>
-                </button>
-                <button
-                    class="transport__dots__dot"
-                    @click.prevent="onChangeMeasure(3)"
-                >
-                    <i
-                        :class="{
-                            active: selectedMeasure === 3,
-                            runningMeasure: currentStepAndMeasure.measure === 3,
-                        }"
-                        class="fas fa-circle"
-                    ></i>
-                </button>
+                <Dot
+                    v-for="(measures, index) in numberOfMeasuresInTrack"
+                    :key="index"
+                    :index="index"
+                    :selectedMeasure="selectedMeasure"
+                    @on-change-measure="onChangeMeasure"
+                />
             </div>
         </div>
     </div>
@@ -153,6 +112,7 @@ import Step from "../components/Step.vue";
 import Track from "../components/Track.vue";
 import Master from "../components/Master.vue";
 import Effects from "../components/Effects.vue";
+import Dot from "../components/Dot.vue";
 
 export default {
     components: {
@@ -160,6 +120,7 @@ export default {
         Track,
         Master,
         Effects,
+        Dot,
     },
     data() {
         return {
@@ -181,6 +142,9 @@ export default {
             return this.$store.state.tracksDATA[this.currentTrack][
                 this.selectedMeasure
             ];
+        },
+        numberOfMeasuresInTrack() {
+            return this.$store.state.tracksDATA[this.currentTrack];
         },
         ...mapGetters(["currentStepAndMeasure"]),
     },
@@ -209,12 +173,13 @@ export default {
                 this.isForwarding = false;
             }, 100);
         },
-        onChangeMeasure(value) {
-            this.selectedMeasure = value;
-        },
         // Event from track
         onChangeTrack(trackNumber) {
             this.currentTrack = trackNumber;
+        },
+        // Event from dot
+        onChangeMeasure(value) {
+            this.selectedMeasure = value;
         },
         // Clock
         incrementTempo() {
@@ -325,19 +290,10 @@ export default {
     }
     &__dots {
         display: flex;
-        & > * {
-            color: var(--secondary-color);
-            font-size: 1.2rem;
-            margin-left: 10px;
-        }
     }
 }
 
 .active {
     color: var(--primary-color);
-}
-
-.runningMeasure {
-    opacity: 0.5;
 }
 </style>

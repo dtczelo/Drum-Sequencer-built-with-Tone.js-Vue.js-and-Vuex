@@ -5,6 +5,8 @@
 Drum Sequencer built with Tone.js, Vue.js, Vuex and can be run with electron.
 Vuex handle clock, sounds routing and sequencer data.
 
+Inspired by [Elektron](https://www.elektron.se/#) sequencer and [Korg](https://www.korg.com/fr/) products ✨
+
 ![Front panel](./src/assets/Front.jpg)
 
 ## Project setup
