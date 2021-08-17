@@ -2,11 +2,12 @@
     <div class="effect">
         <hr>
         <div class="effect__selection-container">
+            <button class="effect__btn">Pitch</button>
+            <button class="effect__btn">Decay</button>
+            <button class="effect__btn">Volume</button>
             <button class="effect__btn">Distortion</button>
             <button class="effect__btn">Filter</button>
             <button class="effect__btn">Bitcrush</button>
-            <button class="effect__btn">Decay</button>
-            <button class="effect__btn">Volume</button>
         </div>
         <div class="effect__locks">
             <Lock v-for="step in numberOfSteps" :key="step.id" />

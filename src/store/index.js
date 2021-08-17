@@ -62,6 +62,11 @@ const masterChannelPan = 0; // Must be within -1 & 1
 // const feedbackDelay3 = new Tone.FeedbackDelay("8n", 0);
 // const feedbackDelay4 = new Tone.FeedbackDelay("8n", 0);
 
+const dogDisto = new Tone.Distortion(0.9);
+const dogEq = new Tone.EQ3(6, 0, -5);
+const dogLimiter = new Tone.Limiter(-40).toDestination();
+const dogChain = new Tone.Chorus(6, 8, 3).chain(dogDisto, dogEq, dogLimiter);
+
 const limiter = new Tone.Limiter(-6).toDestination();
 
 // Channels & Master section
@@ -93,6 +98,7 @@ masterChannel.connect(limiter);
 export default new Vuex.Store({
     state: {
         toTheMoonMod: false,
+        dogMod: false,
         mainClock: 0,
         scheduleTick: -1,
         currentMeasure: 0,
@@ -170,8 +176,17 @@ export default new Vuex.Store({
     },
     mutations: {
         // MOD
-        toggleToTheMoonMod(state) {
-            state.toTheMoonMod = !state.toTheMoonMod;
+        toggleToTheMoonMod(state, value) {
+            state.toTheMoonMod = value;
+        },
+        toggleDogMod(state, value) {
+            if (value) {
+                state.dogMod = value;
+                masterChannel.connect(dogChain);
+            } else {
+                state.dogMod = value;
+                masterChannel.disconnect(dogChain);
+            }
         },
         // CONFIG
         onChangeConfig(state, payload) {

@@ -12,7 +12,13 @@
         </div>
         <div class="config__input-item">
             <label for="numbersOfSteps">Numbers of steps :</label>
-            <input :placeholder="numberOfSteps" v-model="steps" type="number" min="1" max="16" />
+            <input
+                :placeholder="numberOfSteps"
+                v-model="steps"
+                type="number"
+                min="1"
+                max="16"
+            />
         </div>
         <div class="config__switch-item">
             <label>To the moon Mod</label>
@@ -24,11 +30,11 @@
         </div>
         <div class="config__switch-item">
             <label>Dog Mod</label>
-            <Switches />
+            <Switches v-model="dogMod" />
         </div>
         <div>
             <button @click.prevent="onSave" class="config__save-btn">
-                SAVE
+                SAVE & RESET
             </button>
         </div>
     </div>
@@ -44,6 +50,8 @@ export default {
     data() {
         return {
             toTheMoonMod: false,
+            godMod: true,
+            dogMod: false,
             measures: null,
             steps: null,
         };
@@ -58,7 +66,10 @@ export default {
     },
     watch: {
         toTheMoonMod() {
-            this.$store.commit("toggleToTheMoonMod");
+            this.$store.commit("toggleToTheMoonMod", this.toTheMoonMod);
+        },
+        dogMod() {
+            this.$store.commit("toggleDogMod", this.dogMod);
         },
     },
     methods: {
@@ -70,6 +81,11 @@ export default {
             this.$store.commit("initDATA");
         },
     },
+    mounted() {
+        this.toTheMoonMod = this.$store.state.toTheMoonMod;
+        this.dogMod = this.$store.state.dogMod;
+        
+    }
 };
 </script>
 

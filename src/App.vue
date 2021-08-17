@@ -52,6 +52,7 @@
             <div class="star"></div>
             <div class="star"></div>
         </div>
+        <div v-if="dogMod" class="dogMod-img"></div>
       <!-- <router-link to="/about">About</router-link> -->
         <nav class="nav">
             <div v-if="isConfigDisplayed">
@@ -89,6 +90,9 @@ export default {
     computed: {
         toTheMoonMod() {
             return this.$store.state.toTheMoonMod;
+        },
+        dogMod() {
+          return this.$store.state.dogMod;
         }
     },
     methods: {
@@ -199,6 +203,20 @@ hr {
 }
 .translate-config-enter, .translate-config-leave-to {
   transform: translateY(-100%);
+}
+
+// Dog Mod
+
+.dogMod-img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url("./assets/dog-shaking-head.png");
+  background-position: 68% 25%;
+  background-repeat: no-repeat;
+  background-size: 20% 20%;
 }
 
 // To the moon mod
