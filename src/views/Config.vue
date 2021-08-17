@@ -6,11 +6,13 @@
                 :placeholder="numberOfMeasures"
                 v-model="measures"
                 type="number"
+                min="1"
+                max="4"
             />
         </div>
         <div class="config__input-item">
             <label for="numbersOfSteps">Numbers of steps :</label>
-            <input :placeholder="numberOfSteps" v-model="steps" type="number" />
+            <input :placeholder="numberOfSteps" v-model="steps" type="number" min="1" max="16" />
         </div>
         <div class="config__switch-item">
             <label>To the moon Mod</label>

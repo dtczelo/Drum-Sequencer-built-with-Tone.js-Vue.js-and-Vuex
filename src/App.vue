@@ -147,7 +147,7 @@ html {
 }
 
 .nav {
-    height: 5vh;
+    height: 4vh;
     &__btn {
         position: relative;
         width: 50px;

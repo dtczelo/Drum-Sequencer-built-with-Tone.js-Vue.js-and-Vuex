@@ -172,7 +172,8 @@ export default {
         currentStepAndMeasure: {
             handler(payload) {
                 if (payload.step >= 0) {
-                    this.track[this.$store.state.currentMeasure][payload.step].active === true && this.playSound();
+                    this.track[this.$store.state.currentMeasure][payload.step]
+                        .active === true && this.playSound();
                 }
             },
             deep: true,
@@ -231,17 +232,20 @@ export default {
             case 0:
                 this.trackSample = this.$store.state.track1;
                 break;
-
             case 1:
                 this.trackSample = this.$store.state.track2;
                 break;
-
             case 2:
                 this.trackSample = this.$store.state.track3;
                 break;
-
             case 3:
                 this.trackSample = this.$store.state.track4;
+                break;
+            case 4:
+                this.trackSample = this.$store.state.track5;
+                break;
+            case 5:
+                this.trackSample = this.$store.state.track6;
                 break;
             default:
                 break;
@@ -257,7 +261,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     &__btn {
-        padding: 0.5rem 1rem;
+        padding: 0.2rem 1rem;
         font-size: 1.2rem;
         background-color: var(--secondary-color);
         color: var(--text-color);

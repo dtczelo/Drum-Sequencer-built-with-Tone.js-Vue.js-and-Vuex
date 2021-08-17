@@ -231,7 +231,7 @@ export default {
 
 .tracks {
     grid-area: tracks;
-    height: 35vh;
+    height: 40vh;
     width: min(90%, 1800px);
     margin: 0 auto;
     display: flex;
@@ -250,7 +250,7 @@ export default {
 .effects {
     grid-area: effects;
     width: min(90%, 1800px);
-    height: 40vh;
+    height: 35vh;
     margin: 0 auto;
 }
 
@@ -265,9 +265,6 @@ export default {
     &__step {
         width: 50px;
         height: 50px;
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
         background-color: var(--secondary-color);
         border-radius: 4px;
     }

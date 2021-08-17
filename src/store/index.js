@@ -5,10 +5,12 @@ import { uuid } from 'uuidv4';
 
 Vue.use(Vuex);
 
-import kick from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
-import clap from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
-import hh from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
-import snare from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
+import sound1 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
+import sound2 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
+import sound3 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
+import sound4 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
+import sound5 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/FINGSNAP_A.wav";
+import sound6 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/CABASA.wav"
 
 const initialTempo = 120;
 const allChannelsVolume = 0;
@@ -67,6 +69,9 @@ const channel1 = new Tone.Channel(allChannelsVolume, 0);
 const channel2 = new Tone.Channel(allChannelsVolume, 0);
 const channel3 = new Tone.Channel(allChannelsVolume, 0);
 const channel4 = new Tone.Channel(allChannelsVolume, 0);
+const channel5 = new Tone.Channel(allChannelsVolume, 0);
+const channel6 = new Tone.Channel(allChannelsVolume, 0);
+
 
 const masterChannel = new Tone.Channel(masterChannelVolume, masterChannelPan);
 
@@ -91,13 +96,13 @@ export default new Vuex.Store({
         mainClock: 0,
         scheduleTick: -1,
         currentMeasure: 0,
-        numberOfTracks: 4,
+        numberOfTracks: 6,
         numberOfMeasures: 2,
         numberOfSteps: 16,
         // TracksDATA => Track : Array => Measure : Array => Steps : Array
         tracksDATA: [],
         tempo: initialTempo,
-        track1: new Tone.Player(kick).chain(
+        track1: new Tone.Player(sound1).chain(
             // ampEnv1,
             // distortion1,
             // LPF1,
@@ -106,7 +111,7 @@ export default new Vuex.Store({
             channel1,
             masterChannel
         ),
-        track2: new Tone.Player(clap).chain(
+        track2: new Tone.Player(sound2).chain(
             // ampEnv2,
             // distortion2,
             // LPF2,
@@ -115,7 +120,7 @@ export default new Vuex.Store({
             channel2,
             masterChannel
         ),
-        track3: new Tone.Player(hh).chain(
+        track3: new Tone.Player(sound3).chain(
             // ampEnv3,
             // distortion3,
             // LPF3,
@@ -124,13 +129,31 @@ export default new Vuex.Store({
             channel3,
             masterChannel
         ),
-        track4: new Tone.Player(snare).chain(
+        track4: new Tone.Player(sound4).chain(
             // ampEnv4,
             // distortion4,
             // LPF4,
             // HPF4,
             // feedbackDelay4,
             channel4,
+            masterChannel
+        ),
+        track5: new Tone.Player(sound5).chain(
+            // ampEnv5,
+            // distortion5,
+            // LPF5,
+            // HPF5,
+            // feedbackDelay5,
+            channel5,
+            masterChannel
+        ),
+        track6: new Tone.Player(sound6).chain(
+            // ampEnv6,
+            // distortion6,
+            // LPF6,
+            // HPF6,
+            // feedbackDelay6,
+            channel6,
             masterChannel
         ),
     },

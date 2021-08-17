@@ -46,7 +46,7 @@ export default {
         margin-bottom: 1rem;
     }
     &__btn {
-        padding: 0.5rem 1rem;
+        padding: 0.2rem 1rem;
         font-size: 1.2rem;
         background-color: var(--secondary-color);
         color: var(--text-color);
@@ -54,7 +54,7 @@ export default {
     }
     &__locks {
         width: 100%;
-        height: 25vh;
+        height: 23vh;
         display: flex;
         justify-content: space-between;
     }
