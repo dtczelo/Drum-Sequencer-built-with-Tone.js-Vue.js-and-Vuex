@@ -26,7 +26,10 @@
         </div>
         <div class="config__switch-item">
             <label>God Mod</label>
-            <Switches />
+            <Switches v-model="godMod" />
+            <span class="godMod__label" v-if="godMod"
+                >Please be gentle ...</span
+            >
         </div>
         <div class="config__switch-item">
             <label>Dog Mod</label>
@@ -50,7 +53,7 @@ export default {
     data() {
         return {
             toTheMoonMod: false,
-            godMod: true,
+            godMod: false,
             dogMod: false,
             measures: null,
             steps: null,
@@ -71,6 +74,9 @@ export default {
         dogMod() {
             this.$store.commit("toggleDogMod", this.dogMod);
         },
+        godMod() {
+            this.$store.commit("toggleGodMod", this.godMod);
+        },
     },
     methods: {
         onSave() {
@@ -84,8 +90,8 @@ export default {
     mounted() {
         this.toTheMoonMod = this.$store.state.toTheMoonMod;
         this.dogMod = this.$store.state.dogMod;
-        
-    }
+        this.godMod = this.$store.state.godMod;
+    },
 };
 </script>
 
@@ -98,10 +104,12 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     &__switch-item {
-        text-align: left;
+        display: flex;
+        align-items: center;
     }
     &__input-item {
-        text-align: left;
+        display: flex;
+        align-items: center;
     }
     &__save-btn {
         padding: 0.5rem 1rem;
@@ -109,10 +117,31 @@ export default {
         background-color: var(--secondary-color);
         color: var(--text-color);
         border-radius: 4px;
+        &:hover {
+            animation: shaking 3s;
+        }
+    }
+}
+
+.godMod {
+    &__label {
+        margin-left: 2rem;
     }
 }
 
 label {
     margin-right: 20px;
+}
+
+@keyframes shaking {
+  0% {
+    transform: translate(6, 8);
+  }
+  50% {
+    transform: translate(-7, -5);
+  }
+  100% {
+    transform: translate(0, 2);
+  }
 }
 </style>

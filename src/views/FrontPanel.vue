@@ -232,7 +232,7 @@ export default {
 .tracks {
     grid-area: tracks;
     height: 40vh;
-    width: min(90%, 1800px);
+    width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -243,13 +243,13 @@ export default {
 .master-section {
     grid-area: master;
     height: 35vh;
-    width: min(90%, 1800px);
+    width: 100%;
     margin: 0 auto;
 }
 
 .effects {
     grid-area: effects;
-    width: min(90%, 1800px);
+    width: 100%;
     height: 35vh;
     margin: 0 auto;
 }
@@ -257,7 +257,7 @@ export default {
 .steps {
     grid-area: steps;
     height: 10vh;
-    width: min(90%, 1800px);
+    width: 100%;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -273,7 +273,7 @@ export default {
 .transport {
     grid-area: transport;
     height: 5vh;
-    width: min(90%, 1800px);
+    width: 100%;
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
