@@ -61,6 +61,9 @@
 import RoundSlider from "vue-round-slider";
 
 export default {
+    props: {
+        index: Number
+    },
     components: {
         RoundSlider,
     },

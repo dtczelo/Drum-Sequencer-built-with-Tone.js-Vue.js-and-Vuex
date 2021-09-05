@@ -264,17 +264,15 @@ export default new Vuex.Store({
             }
         },
         onAddStep(state, payload) {
-            // console.log(
-            //     state.tracksDATA[payload.currentTrack][payload.currentMeasure][
-            //         payload.selectedStep
-            //     ]
-            // );
             state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
                 payload.selectedStep
             ].active = !state.tracksDATA[payload.currentTrack][
                 payload.selectedMeasure
             ][payload.selectedStep].active;
         },
+        // onChangeParameterLock(state, payload) {
+
+        // },
         // TRACK PARAMETERS
         onChangeTrackPan(state, payload) {
             // Works but maybe channels are in mono so routing to master stereo cancel panning ?
@@ -307,6 +305,12 @@ export default new Vuex.Store({
         //     reverbChannel.volume.value = value;
         // },
         // MASTER PARAMETERS
+        /**
+         * Change master volume value in db
+         * @param {*} state 
+         * @param {number} value - New volume value 
+         * @returns {void}
+         */
         onChangeMasterVolume(state, value) {
             masterChannel.volume.value = value;
         },

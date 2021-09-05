@@ -144,7 +144,6 @@ html {
     width: 100%;
     height: 100vh;
     min-width: 1024px;
-    padding: 0 2rem;
 
     display: flex;
     flex-direction: column;

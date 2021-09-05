@@ -24,7 +24,7 @@
         </div>
         <!-- <hr /> -->
         <div class="effects">
-            <Effects />
+            <Effects :currentTrack="currentTrack" :selectedMeasure="selectedMeasure" />
         </div>
         <div class="steps">
             <Step
@@ -215,6 +215,7 @@ export default {
     mounted() {
         this.$store.commit("initTempo");
         this.sendClockTime();
+        console.log(this.$store.state.tracksDATA);
     },
 };
 </script>
@@ -227,6 +228,8 @@ export default {
         "effects effects effects effects"
         "steps steps steps steps"
         "transport transport transport transport";
+    padding: 0 2rem;
+
 }
 
 .tracks {

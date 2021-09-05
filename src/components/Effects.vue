@@ -10,7 +10,7 @@
             <button class="effect__btn">Bitcrush</button>
         </div>
         <div class="effect__locks">
-            <Lock v-for="step in numberOfSteps" :key="step.id" />
+            <Lock v-for="(step, index) in stepsDATA" :key="step.id" :index="index"/>
         </div>
     </div>
 </template>
@@ -19,6 +19,10 @@
 import Lock from "./Lock.vue";
 
 export default {
+    props: {
+        currentTrack: Number,
+        selectedMeasure: Number
+    },
     components: {
         Lock,
     },
@@ -28,8 +32,8 @@ export default {
         };
     },
     computed: {
-        numberOfSteps() {
-            return this.$store.state.tracksDATA[0][0];
+        stepsDATA() {
+            return this.$store.state.tracksDATA[this.currentTrack][this.selectedMeasure];
         }
     }
 };

@@ -2,6 +2,8 @@
 node_modules
 /dist
 
+# Vuepress doc
+/docs
 
 # local env files
 .env.local
