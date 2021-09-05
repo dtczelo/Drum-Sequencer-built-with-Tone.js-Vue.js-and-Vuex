@@ -33,3 +33,9 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Built with
+```
+* [Tone.js](https://tonejs.github.io/)
+* [vuepressify](https://github.com/mikqi/vuepressify)
+* [round-slider](https://github.com/soundar24/vue-round-slider)
