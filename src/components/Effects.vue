@@ -47,9 +47,13 @@
         </div>
         <div class="effect__locks">
             <Lock
-                v-for="(step, index) in stepsDATA"
+                v-for="(step, index) in stepsToRender"
+                :step="step"
+                :currentEffect="currentEffect"
                 :key="step.id"
                 :index="index"
+                :selectedMeasure="selectedMeasure"
+                :currentTrack="currentTrack"
             />
         </div>
     </div>
@@ -60,6 +64,7 @@ import Lock from "./Lock.vue";
 
 export default {
     props: {
+        stepsToRender: Array,
         currentEffect: String,
         currentTrack: Number,
         selectedMeasure: Number,
@@ -69,13 +74,6 @@ export default {
     },
     data() {
         return {};
-    },
-    computed: {
-        stepsDATA() {
-            return this.$store.state.tracksDATA[this.currentTrack][
-                this.selectedMeasure
-            ];
-        },
     },
 };
 </script>

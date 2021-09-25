@@ -171,9 +171,17 @@ export default {
     watch: {
         currentStepAndMeasure: {
             handler(payload) {
-                if (payload.step >= 0) {
+                if (
+                    payload.step >= 0 &&
                     this.track[this.$store.state.currentMeasure][payload.step]
-                        .active === true && this.playSound();
+                        .active === true
+                ) {
+                    this.$store.commit("updateStateEffectsParameters", {
+                        currentTrack: this.currentTrack,
+                        selectedMeasure: this.selectedMeasure,
+                        selectedStep: payload.step,
+                    });
+                    this.playSound();
                 }
             },
             deep: true,

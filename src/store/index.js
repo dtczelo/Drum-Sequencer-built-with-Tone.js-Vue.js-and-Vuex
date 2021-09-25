@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import * as Tone from "tone";
-import { uuid } from 'uuidv4';
+import { uuid } from "uuidv4";
 
 Vue.use(Vuex);
 
@@ -10,7 +10,7 @@ import sound2 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav
 import sound3 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
 import sound4 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
 import sound5 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/FINGSNAP_A.wav";
-import sound6 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/CABASA.wav"
+import sound6 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/CABASA.wav";
 
 const initialTempo = 120;
 const allChannelsVolume = 0;
@@ -70,6 +70,24 @@ const dogChain = new Tone.Chorus(6, 8, 3).chain(dogDisto, dogEq, dogLimiter);
 
 const limiter = new Tone.Limiter(-6).toDestination();
 
+// Distortion
+
+const distortion1 = new Tone.Distortion(0);
+const distortion2 = new Tone.Distortion(0);
+const distortion3 = new Tone.Distortion(0);
+const distortion4 = new Tone.Distortion(0);
+const distortion5 = new Tone.Distortion(0);
+const distortion6 = new Tone.Distortion(0);
+
+// Pan/Vol
+
+const panVol1 = new Tone.PanVol(0, 0);
+const panVol2 = new Tone.PanVol(0, 0);
+const panVol3 = new Tone.PanVol(0, 0);
+const panVol4 = new Tone.PanVol(0, 0);
+const panVol5 = new Tone.PanVol(0, 0);
+const panVol6 = new Tone.PanVol(0, 0);
+
 // Channels & Master section
 const channel1 = new Tone.Channel(allChannelsVolume, 0);
 const channel2 = new Tone.Channel(allChannelsVolume, 0);
@@ -77,7 +95,6 @@ const channel3 = new Tone.Channel(allChannelsVolume, 0);
 const channel4 = new Tone.Channel(allChannelsVolume, 0);
 const channel5 = new Tone.Channel(allChannelsVolume, 0);
 const channel6 = new Tone.Channel(allChannelsVolume, 0);
-
 
 const masterChannel = new Tone.Channel(masterChannelVolume, masterChannelPan);
 
@@ -105,62 +122,68 @@ export default new Vuex.Store({
         scheduleTick: -1,
         currentMeasure: 0,
         numberOfTracks: 6,
-        numberOfMeasures: 4,
+        numberOfMeasures: 1,
         numberOfSteps: 16,
         // TracksDATA => Track : Array => Measure : Array => Steps : Array
         tracksDATA: [],
         tempo: initialTempo,
         track1: new Tone.Player(sound1).chain(
             // ampEnv1,
-            // distortion1,
+            distortion1,
             // LPF1,
             // HPF1,
             // feedbackDelay1,
+            panVol1,
             channel1,
             masterChannel
         ),
         track2: new Tone.Player(sound2).chain(
             // ampEnv2,
-            // distortion2,
+            distortion2,
             // LPF2,
             // HPF2,
             // feedbackDelay2,
+            panVol2,
             channel2,
             masterChannel
         ),
         track3: new Tone.Player(sound3).chain(
             // ampEnv3,
-            // distortion3,
+            distortion3,
             // LPF3,
             // HPF3,
             // feedbackDelay3,
+            panVol3,
             channel3,
             masterChannel
         ),
         track4: new Tone.Player(sound4).chain(
             // ampEnv4,
-            // distortion4,
+            distortion4,
             // LPF4,
             // HPF4,
             // feedbackDelay4,
+            panVol4,
             channel4,
             masterChannel
         ),
         track5: new Tone.Player(sound5).chain(
             // ampEnv5,
-            // distortion5,
+            distortion5,
             // LPF5,
             // HPF5,
             // feedbackDelay5,
+            panVol5,
             channel5,
             masterChannel
         ),
         track6: new Tone.Player(sound6).chain(
             // ampEnv6,
-            // distortion6,
+            distortion6,
             // LPF6,
             // HPF6,
             // feedbackDelay6,
+            panVol6,
             channel6,
             masterChannel
         ),
@@ -252,8 +275,15 @@ export default new Vuex.Store({
                 return Array.from({ length: state.numberOfSteps }, () => ({
                     id: uuid(),
                     active: false,
+                    pitch: { param1: 64, type: "bipolar" },
+                    decay: { param1: 127, type: "unipolar" },
+                    pan: { param1: 64, type: "bipolar" },
+                    volume: { param1: 127, type: "unipolar" },
+                    distortion: { param1: 0, type: "unipolar" },
+                    filter: { param1: 64, type: "bipolar" },
+                    bitcrush: { param1: 0, type: "unipolar" },
                 }));
-            }
+            };
             // Initialized Tracks Data
             for (let i = 0; i < state.numberOfTracks; i++) {
                 const filledTrack = Array.from(
@@ -270,9 +300,6 @@ export default new Vuex.Store({
                 payload.selectedMeasure
             ][payload.selectedStep].active;
         },
-        // onChangeParameterLock(state, payload) {
-
-        // },
         // TRACK PARAMETERS
         onChangeTrackPan(state, payload) {
             // Works but maybe channels are in mono so routing to master stereo cancel panning ?
@@ -307,14 +334,198 @@ export default new Vuex.Store({
         // MASTER PARAMETERS
         /**
          * Change master volume value in db
-         * @param {*} state 
-         * @param {number} value - New volume value 
+         * @param {*} state
+         * @param {number} value - New volume value
          * @returns {void}
          */
         onChangeMasterVolume(state, value) {
             masterChannel.volume.value = value;
         },
+        // EFFECTS PARAMETERS
+        updateStateEffectsParameters(state, payload) {
+            const currentStepParameters =
+                state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
+                    payload.selectedStep
+                ];
+            switch (payload.currentTrack) {
+                case 0:
+                    distortion1.distortion = linearRange(
+                        0,
+                        1,
+                        0,
+                        127,
+                        currentStepParameters.distortion.param1
+                    );
+                    panVol1.set({
+                        volume: linearRange(
+                            -60,
+                            0,
+                            0,
+                            127,
+                            currentStepParameters.volume.param1
+                        ),
+                        pan: linearRange(
+                            -1,
+                            1,
+                            0,
+                            127,
+                            currentStepParameters.pan.param1
+                        ),
+                    });
+                    break;
+                case 1:
+                    distortion2.distortion = linearRange(
+                        0,
+                        1,
+                        0,
+                        127,
+                        currentStepParameters.distortion.param1
+                    );
+                    panVol2.set({
+                        volume: linearRange(
+                            -60,
+                            0,
+                            0,
+                            127,
+                            currentStepParameters.volume.param1
+                        ),
+                        pan: linearRange(
+                            -1,
+                            1,
+                            0,
+                            127,
+                            currentStepParameters.pan.param1
+                        ),
+                    });
+                    break;
+                case 2:
+                    distortion3.distortion = linearRange(
+                        0,
+                        1,
+                        0,
+                        127,
+                        currentStepParameters.distortion.param1
+                    );
+                    panVol3.set({
+                        volume: linearRange(
+                            -60,
+                            0,
+                            0,
+                            127,
+                            currentStepParameters.volume.param1
+                        ),
+                        pan: linearRange(
+                            -1,
+                            1,
+                            0,
+                            127,
+                            currentStepParameters.pan.param1
+                        ),
+                    });
+                    break;
+                case 3:
+                    distortion4.distortion = linearRange(
+                        0,
+                        1,
+                        0,
+                        127,
+                        currentStepParameters.distortion.param1
+                    );
+                    panVol4.set({
+                        volume: linearRange(
+                            -60,
+                            0,
+                            0,
+                            127,
+                            currentStepParameters.volume.param1
+                        ),
+                        pan: linearRange(
+                            -1,
+                            1,
+                            0,
+                            127,
+                            currentStepParameters.pan.param1
+                        ),
+                    });
+                    break;
+                case 4:
+                    distortion5.distortion = linearRange(
+                        0,
+                        1,
+                        0,
+                        127,
+                        currentStepParameters.distortion.param1
+                    );
+                    panVol5.set({
+                        volume: linearRange(
+                            -60,
+                            0,
+                            0,
+                            127,
+                            currentStepParameters.volume.param1
+                        ),
+                        pan: linearRange(
+                            -1,
+                            1,
+                            0,
+                            127,
+                            currentStepParameters.pan.param1
+                        ),
+                    });
+                    break;
+                case 5:
+                    distortion6.distortion = linearRange(
+                        0,
+                        1,
+                        0,
+                        127,
+                        currentStepParameters.distortion.param1
+                    );
+                    panVol6.set({
+                        volume: linearRange(
+                            -60,
+                            0,
+                            0,
+                            127,
+                            currentStepParameters.volume.param1
+                        ),
+                        pan: linearRange(
+                            -1,
+                            1,
+                            0,
+                            127,
+                            currentStepParameters.pan.param1
+                        ),
+                    });
+                    break;
+            }
+        },
+        onChangeParameterLock1(state, payload) {
+            state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
+                payload.selectedStep
+            ][payload.currentEffect].param1 = payload.value;
+        },
     },
     actions: {},
     modules: {},
 });
+
+// Utilitaries function
+
+// Interpolation 0-127 values to 0-1 values
+function linearRange(
+    targetMinRange,
+    targetMaxRange,
+    sourceMinRange,
+    sourceMaxRange,
+    value
+) {
+    const clamp = (a, min = 0, max = 1) => Math.min(max, Math.max(min, a));
+    const lerp = (x, y, a) => x * (1 - a) + y * a;
+    const invlerp = (x, y, a) => clamp((a - x) / (y - x));
+    return lerp(
+        targetMinRange,
+        targetMaxRange,
+        invlerp(sourceMinRange, sourceMaxRange, value)
+    );
+}

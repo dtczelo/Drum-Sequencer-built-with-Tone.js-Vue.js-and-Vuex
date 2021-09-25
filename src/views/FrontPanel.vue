@@ -28,6 +28,7 @@
                 :currentTrack="currentTrack"
                 :currentEffect="currentEffect"
                 :selectedMeasure="selectedMeasure"
+                :stepsToRender="stepsToRender"
                 @change-effect="onChangeEffect"
 
             />
