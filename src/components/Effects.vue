@@ -1,16 +1,56 @@
 <template>
     <div class="effect">
-        <hr>
+        <hr />
         <div class="effect__selection-container">
-            <button class="effect__btn">Pitch</button>
-            <button class="effect__btn">Decay</button>
-            <button class="effect__btn">Volume</button>
-            <button class="effect__btn">Distortion</button>
-            <button class="effect__btn">Filter</button>
-            <button class="effect__btn">Bitcrush</button>
+            <button
+                @click="$emit('change-effect', 'pitch')"
+                :class="{ active: currentEffect === 'pitch' }"
+                class="effect__btn"
+            >
+                Pitch
+            </button>
+            <button
+                @click="$emit('change-effect', 'decay')"
+                :class="{ active: currentEffect === 'decay' }"
+                class="effect__btn"
+            >
+                Decay
+            </button>
+            <button
+                @click="$emit('change-effect', 'volume')"
+                :class="{ active: currentEffect === 'volume' }"
+                class="effect__btn"
+            >
+                Volume
+            </button>
+            <button
+                @click="$emit('change-effect', 'distortion')"
+                :class="{ active: currentEffect === 'distortion' }"
+                class="effect__btn"
+            >
+                Distortion
+            </button>
+            <button
+                @click="$emit('change-effect', 'filter')"
+                :class="{ active: currentEffect === 'filter' }"
+                class="effect__btn"
+            >
+                Filter
+            </button>
+            <button
+                @click="$emit('change-effect', 'bitcrush')"
+                :class="{ active: currentEffect === 'bitcrush' }"
+                class="effect__btn"
+            >
+                Bitcrush
+            </button>
         </div>
         <div class="effect__locks">
-            <Lock v-for="(step, index) in stepsDATA" :key="step.id" :index="index"/>
+            <Lock
+                v-for="(step, index) in stepsDATA"
+                :key="step.id"
+                :index="index"
+            />
         </div>
     </div>
 </template>
@@ -20,22 +60,23 @@ import Lock from "./Lock.vue";
 
 export default {
     props: {
+        currentEffect: String,
         currentTrack: Number,
-        selectedMeasure: Number
+        selectedMeasure: Number,
     },
     components: {
         Lock,
     },
     data() {
-        return {
-
-        };
+        return {};
     },
     computed: {
         stepsDATA() {
-            return this.$store.state.tracksDATA[this.currentTrack][this.selectedMeasure];
-        }
-    }
+            return this.$store.state.tracksDATA[this.currentTrack][
+                this.selectedMeasure
+            ];
+        },
+    },
 };
 </script>
 
@@ -69,4 +110,7 @@ hr {
     margin: 1rem 0;
 }
 
+.active {
+    color: var(--primary-color);
+}
 </style>

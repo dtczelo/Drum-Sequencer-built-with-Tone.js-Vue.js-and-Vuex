@@ -24,7 +24,13 @@
         </div>
         <!-- <hr /> -->
         <div class="effects">
-            <Effects :currentTrack="currentTrack" :selectedMeasure="selectedMeasure" />
+            <Effects
+                :currentTrack="currentTrack"
+                :currentEffect="currentEffect"
+                :selectedMeasure="selectedMeasure"
+                @change-effect="onChangeEffect"
+
+            />
         </div>
         <div class="steps">
             <Step
@@ -133,6 +139,7 @@ export default {
             isForwarding: false,
             isBackwarding: false,
             currentTrack: 0,
+            currentEffect: "pitch",
             selectedMeasure: 0,
         };
     },
@@ -190,6 +197,10 @@ export default {
         onChangeTrack(trackNumber) {
             this.currentTrack = trackNumber;
         },
+        // Event from effects
+        onChangeEffect(value) {
+            this.currentEffect = value;
+        },
         // Event from dot
         onChangeMeasure(value) {
             this.selectedMeasure = value;
@@ -215,7 +226,7 @@ export default {
     mounted() {
         this.$store.commit("initTempo");
         this.sendClockTime();
-        console.log(this.$store.state.tracksDATA);
+        // console.log(this.$store.state.tracksDATA);
     },
 };
 </script>
@@ -229,7 +240,6 @@ export default {
         "steps steps steps steps"
         "transport transport transport transport";
     padding: 0 2rem;
-
 }
 
 .tracks {

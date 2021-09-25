@@ -24,13 +24,13 @@
             <label>To the moon Mod</label>
             <Switches v-model="toTheMoonMod" />
         </div>
-        <div class="config__switch-item">
+        <!-- <div class="config__switch-item">
             <label>God Mod</label>
             <Switches v-model="godMod" />
             <span class="godMod__label" v-if="godMod"
                 >Please be gentle ...</span
             >
-        </div>
+        </div> -->
         <div class="config__switch-item">
             <label>Dog Mod</label>
             <Switches v-model="dogMod" />
