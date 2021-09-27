@@ -177,7 +177,6 @@ export default {
                         .active === true
                 ) {
                     this.$store.commit("updateStateEffectsParameters", {
-                        currentTrack: this.currentTrack,
                         selectedMeasure: this.selectedMeasure,
                         selectedStep: payload.step,
                     });

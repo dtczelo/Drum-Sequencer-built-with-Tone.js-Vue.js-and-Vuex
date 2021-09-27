@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import * as Tone from "tone";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 Vue.use(Vuex);
 
@@ -11,6 +11,61 @@ import sound3 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav"
 import sound4 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav";
 import sound5 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/FINGSNAP_A.wav";
 import sound6 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/CABASA.wav";
+
+const buffer1 = new Tone.ToneAudioBuffer(
+    sound1,
+    () => {
+        console.log("Buffer OK !");
+    },
+    (error) => {
+        console.log(error);
+    }
+);
+const buffer2 = new Tone.ToneAudioBuffer(
+    sound2,
+    () => {
+        console.log("Buffer OK !");
+    },
+    (error) => {
+        console.log(error);
+    }
+);
+const buffer3 = new Tone.ToneAudioBuffer(
+    sound3,
+    () => {
+        console.log("Buffer OK !");
+    },
+    (error) => {
+        console.log(error);
+    }
+);
+const buffer4 = new Tone.ToneAudioBuffer(
+    sound4,
+    () => {
+        console.log("Buffer OK !");
+    },
+    (error) => {
+        console.log(error);
+    }
+);
+const buffer5 = new Tone.ToneAudioBuffer(
+    sound5,
+    () => {
+        console.log("Buffer OK !");
+    },
+    (error) => {
+        console.log(error);
+    }
+);
+const buffer6 = new Tone.ToneAudioBuffer(
+    sound6,
+    () => {
+        console.log("Buffer OK !");
+    },
+    (error) => {
+        console.log(error);
+    }
+);
 
 const initialTempo = 120;
 const allChannelsVolume = 0;
@@ -127,7 +182,7 @@ export default new Vuex.Store({
         // TracksDATA => Track : Array => Measure : Array => Steps : Array
         tracksDATA: [],
         tempo: initialTempo,
-        track1: new Tone.Player(sound1).chain(
+        track1: new Tone.Player(buffer1).chain(
             // ampEnv1,
             distortion1,
             // LPF1,
@@ -137,7 +192,7 @@ export default new Vuex.Store({
             channel1,
             masterChannel
         ),
-        track2: new Tone.Player(sound2).chain(
+        track2: new Tone.Player(buffer2).chain(
             // ampEnv2,
             distortion2,
             // LPF2,
@@ -147,7 +202,7 @@ export default new Vuex.Store({
             channel2,
             masterChannel
         ),
-        track3: new Tone.Player(sound3).chain(
+        track3: new Tone.Player(buffer3).chain(
             // ampEnv3,
             distortion3,
             // LPF3,
@@ -157,7 +212,7 @@ export default new Vuex.Store({
             channel3,
             masterChannel
         ),
-        track4: new Tone.Player(sound4).chain(
+        track4: new Tone.Player(buffer4).chain(
             // ampEnv4,
             distortion4,
             // LPF4,
@@ -167,7 +222,7 @@ export default new Vuex.Store({
             channel4,
             masterChannel
         ),
-        track5: new Tone.Player(sound5).chain(
+        track5: new Tone.Player(buffer5).chain(
             // ampEnv5,
             distortion5,
             // LPF5,
@@ -177,7 +232,7 @@ export default new Vuex.Store({
             channel5,
             masterChannel
         ),
-        track6: new Tone.Player(sound6).chain(
+        track6: new Tone.Player(buffer6).chain(
             // ampEnv6,
             distortion6,
             // LPF6,
@@ -293,6 +348,7 @@ export default new Vuex.Store({
                 state.tracksDATA.push(filledTrack);
             }
         },
+        // SEQUENCER DATA
         onAddStep(state, payload) {
             state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
                 payload.selectedStep
@@ -343,162 +399,168 @@ export default new Vuex.Store({
         },
         // EFFECTS PARAMETERS
         updateStateEffectsParameters(state, payload) {
-            const currentStepParameters =
-                state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
+            const currentStepParametersTrack1 =
+                state.tracksDATA[0][payload.selectedMeasure][
                     payload.selectedStep
                 ];
-            switch (payload.currentTrack) {
-                case 0:
-                    distortion1.distortion = linearRange(
-                        0,
-                        1,
-                        0,
-                        127,
-                        currentStepParameters.distortion.param1
-                    );
-                    panVol1.set({
-                        volume: linearRange(
-                            -60,
-                            0,
-                            0,
-                            127,
-                            currentStepParameters.volume.param1
-                        ),
-                        pan: linearRange(
-                            -1,
-                            1,
-                            0,
-                            127,
-                            currentStepParameters.pan.param1
-                        ),
-                    });
-                    break;
-                case 1:
-                    distortion2.distortion = linearRange(
-                        0,
-                        1,
-                        0,
-                        127,
-                        currentStepParameters.distortion.param1
-                    );
-                    panVol2.set({
-                        volume: linearRange(
-                            -60,
-                            0,
-                            0,
-                            127,
-                            currentStepParameters.volume.param1
-                        ),
-                        pan: linearRange(
-                            -1,
-                            1,
-                            0,
-                            127,
-                            currentStepParameters.pan.param1
-                        ),
-                    });
-                    break;
-                case 2:
-                    distortion3.distortion = linearRange(
-                        0,
-                        1,
-                        0,
-                        127,
-                        currentStepParameters.distortion.param1
-                    );
-                    panVol3.set({
-                        volume: linearRange(
-                            -60,
-                            0,
-                            0,
-                            127,
-                            currentStepParameters.volume.param1
-                        ),
-                        pan: linearRange(
-                            -1,
-                            1,
-                            0,
-                            127,
-                            currentStepParameters.pan.param1
-                        ),
-                    });
-                    break;
-                case 3:
-                    distortion4.distortion = linearRange(
-                        0,
-                        1,
-                        0,
-                        127,
-                        currentStepParameters.distortion.param1
-                    );
-                    panVol4.set({
-                        volume: linearRange(
-                            -60,
-                            0,
-                            0,
-                            127,
-                            currentStepParameters.volume.param1
-                        ),
-                        pan: linearRange(
-                            -1,
-                            1,
-                            0,
-                            127,
-                            currentStepParameters.pan.param1
-                        ),
-                    });
-                    break;
-                case 4:
-                    distortion5.distortion = linearRange(
-                        0,
-                        1,
-                        0,
-                        127,
-                        currentStepParameters.distortion.param1
-                    );
-                    panVol5.set({
-                        volume: linearRange(
-                            -60,
-                            0,
-                            0,
-                            127,
-                            currentStepParameters.volume.param1
-                        ),
-                        pan: linearRange(
-                            -1,
-                            1,
-                            0,
-                            127,
-                            currentStepParameters.pan.param1
-                        ),
-                    });
-                    break;
-                case 5:
-                    distortion6.distortion = linearRange(
-                        0,
-                        1,
-                        0,
-                        127,
-                        currentStepParameters.distortion.param1
-                    );
-                    panVol6.set({
-                        volume: linearRange(
-                            -60,
-                            0,
-                            0,
-                            127,
-                            currentStepParameters.volume.param1
-                        ),
-                        pan: linearRange(
-                            -1,
-                            1,
-                            0,
-                            127,
-                            currentStepParameters.pan.param1
-                        ),
-                    });
-                    break;
-            }
+            const currentStepParametersTrack2 =
+                state.tracksDATA[1][payload.selectedMeasure][
+                    payload.selectedStep
+                ];
+            const currentStepParametersTrack3 =
+                state.tracksDATA[2][payload.selectedMeasure][
+                    payload.selectedStep
+                ];
+            const currentStepParametersTrack4 =
+                state.tracksDATA[3][payload.selectedMeasure][
+                    payload.selectedStep
+                ];
+            const currentStepParametersTrack5 =
+                state.tracksDATA[4][payload.selectedMeasure][
+                    payload.selectedStep
+                ];
+            const currentStepParametersTrack6 =
+                state.tracksDATA[5][payload.selectedMeasure][
+                    payload.selectedStep
+                ];
+            distortion1.distortion = linearRange(
+                0,
+                1,
+                0,
+                127,
+                currentStepParametersTrack1.distortion.param1
+            );
+            panVol1.set({
+                volume: linearRange(
+                    -60,
+                    0,
+                    0,
+                    127,
+                    currentStepParametersTrack1.volume.param1
+                ),
+                pan: linearRange(
+                    -1,
+                    1,
+                    0,
+                    127,
+                    currentStepParametersTrack1.pan.param1
+                ),
+            });
+            distortion2.distortion = linearRange(
+                0,
+                1,
+                0,
+                127,
+                currentStepParametersTrack2.distortion.param1
+            );
+            panVol2.set({
+                volume: linearRange(
+                    -60,
+                    0,
+                    0,
+                    127,
+                    currentStepParametersTrack2.volume.param1
+                ),
+                pan: linearRange(
+                    -1,
+                    1,
+                    0,
+                    127,
+                    currentStepParametersTrack2.pan.param1
+                ),
+            });
+            distortion3.distortion = linearRange(
+                0,
+                1,
+                0,
+                127,
+                currentStepParametersTrack3.distortion.param1
+            );
+            panVol3.set({
+                volume: linearRange(
+                    -60,
+                    0,
+                    0,
+                    127,
+                    currentStepParametersTrack3.volume.param1
+                ),
+                pan: linearRange(
+                    -1,
+                    1,
+                    0,
+                    127,
+                    currentStepParametersTrack3.pan.param1
+                ),
+            });
+            distortion4.distortion = linearRange(
+                0,
+                1,
+                0,
+                127,
+                currentStepParametersTrack4.distortion.param1
+            );
+            panVol4.set({
+                volume: linearRange(
+                    -60,
+                    0,
+                    0,
+                    127,
+                    currentStepParametersTrack4.volume.param1
+                ),
+                pan: linearRange(
+                    -1,
+                    1,
+                    0,
+                    127,
+                    currentStepParametersTrack4.pan.param1
+                ),
+            });
+            distortion5.distortion = linearRange(
+                0,
+                1,
+                0,
+                127,
+                currentStepParametersTrack5.distortion.param1
+            );
+            panVol5.set({
+                volume: linearRange(
+                    -60,
+                    0,
+                    0,
+                    127,
+                    currentStepParametersTrack5.volume.param1
+                ),
+                pan: linearRange(
+                    -1,
+                    1,
+                    0,
+                    127,
+                    currentStepParametersTrack5.pan.param1
+                ),
+            });
+            distortion6.distortion = linearRange(
+                0,
+                1,
+                0,
+                127,
+                currentStepParametersTrack6.distortion.param1
+            );
+            panVol6.set({
+                volume: linearRange(
+                    -60,
+                    0,
+                    0,
+                    127,
+                    currentStepParametersTrack6.volume.param1
+                ),
+                pan: linearRange(
+                    -1,
+                    1,
+                    0,
+                    127,
+                    currentStepParametersTrack6.pan.param1
+                ),
+            });
         },
         onChangeParameterLock1(state, payload) {
             state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
