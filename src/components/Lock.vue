@@ -1,7 +1,7 @@
 <template>
     <div class="lock">
         <RoundSlider
-            v-if="step[currentEffect].type === 'unipolar'"
+            v-if="step[currentEffect].type1 === 'unipolar'"
             class="lock__slider"
             v-model="param1"
             max="127"
@@ -19,7 +19,7 @@
             pathColor="#b5876d"
         />
         <RoundSlider
-            v-if="step[currentEffect].type === 'bipolar'"
+            v-if="step[currentEffect].type1 === 'bipolar'"
             class="lock__slider"
             v-model="param1"
             max="127"
@@ -36,9 +36,13 @@
             rangeColor="#ff6f00"
             pathColor="#b5876d"
         />
-        <!-- <RoundSlider
+        <RoundSlider
+            v-if="
+                step[currentEffect].type2 &&
+                    step[currentEffect].type2 === 'unipolar'
+            "
             class="lock__slider"
-            v-model="param3"
+            v-model="param2"
             max="127"
             min="0"
             step="1"
@@ -53,7 +57,29 @@
             rangeColor="#ff6f00"
             pathColor="#b5876d"
             disabled="true"
-        /> -->
+        />
+        <RoundSlider
+            v-if="
+                step[currentEffect].type2 &&
+                    step[currentEffect].type2 === 'bipolar'
+            "
+            class="lock__slider"
+            v-model="param1"
+            max="127"
+            min="0"
+            step="1"
+            handleSize="10"
+            start-angle="340"
+            end-angle="+220"
+            line-cap="butt"
+            radius="25"
+            width="4"
+            showTooltip="false"
+            tooltipColor="#402e32"
+            rangeColor="#ff6f00"
+            pathColor="#b5876d"
+            disabled="true"
+        />
     </div>
 </template>
 
@@ -66,7 +92,7 @@ export default {
         currentEffect: String,
         index: Number,
         selectedMeasure: Number,
-        currentTrack: Number
+        currentTrack: Number,
     },
     components: {
         RoundSlider,

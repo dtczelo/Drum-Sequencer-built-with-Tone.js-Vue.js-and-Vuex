@@ -30,7 +30,7 @@
             >
                 Distortion
             </button>
-            <!-- <button
+            <button
                 @click="$emit('change-effect', 'filter')"
                 :class="{ active: currentEffect === 'filter' }"
                 class="effect__btn"
@@ -43,7 +43,7 @@
                 class="effect__btn"
             >
                 Bitcrush
-            </button> -->
+            </button>
         </div>
         <div class="effect__locks">
             <Lock
@@ -98,7 +98,6 @@ export default {
     }
     &__locks {
         width: 100%;
-        height: 23vh;
         display: flex;
         justify-content: space-between;
     }

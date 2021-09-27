@@ -245,7 +245,7 @@ export default {
 
 .tracks {
     grid-area: tracks;
-    height: 40vh;
+    height: 50vh;
     width: 100%;
     margin: 0 auto;
     display: flex;
@@ -264,7 +264,7 @@ export default {
 .effects {
     grid-area: effects;
     width: 100%;
-    height: 35vh;
+    height: 25vh;
     margin: 0 auto;
 }
 

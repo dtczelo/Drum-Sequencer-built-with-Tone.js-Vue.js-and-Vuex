@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 Vue.use(Vuex);
 
 // Constantes
-const LATENCY = 0.05; // add a amount of time on schedule main clock to handle parameters locks processing
+const LATENCY = 0.07; // add a amount of time on schedule main clock to handle parameters locks processing
 const INITIAL_TEMPO = 90;
 const ALL_CHANNELS_VOLUME = 0;
 const MASTER_CHANNEL_VOLUME = 0;
@@ -98,6 +98,30 @@ const panVol4 = new Tone.PanVol(0, 0);
 const panVol5 = new Tone.PanVol(0, 0);
 const panVol6 = new Tone.PanVol(0, 0);
 
+// Bitcrush
+
+const bitcrush1 = new Tone.BitCrusher(16);
+const bitcrush2 = new Tone.BitCrusher(16);
+const bitcrush3 = new Tone.BitCrusher(16);
+const bitcrush4 = new Tone.BitCrusher(16);
+const bitcrush5 = new Tone.BitCrusher(16);
+const bitcrush6 = new Tone.BitCrusher(16);
+
+// Filte1
+
+const LPF1 = new Tone.Filter(20000, "lowpass");
+const HPF1 = new Tone.Filter(0, "highpass");
+const LPF2 = new Tone.Filter(20000, "lowpass");
+const HPF2 = new Tone.Filter(0, "highpass");
+const LPF3 = new Tone.Filter(20000, "lowpass");
+const HPF3 = new Tone.Filter(0, "highpass");
+const LPF4 = new Tone.Filter(20000, "lowpass");
+const HPF4 = new Tone.Filter(0, "highpass");
+const LPF5 = new Tone.Filter(20000, "lowpass");
+const HPF5 = new Tone.Filter(0, "highpass");
+const LPF6 = new Tone.Filter(20000, "lowpass");
+const HPF6 = new Tone.Filter(0, "highpass");
+
 // Channels & Master section
 const channel1 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
 const channel2 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
@@ -142,9 +166,10 @@ export default new Vuex.Store({
         tempo: INITIAL_TEMPO,
         track1: new Tone.Player(buffer1).chain(
             // ampEnv1,
+            bitcrush1,
             distortion1,
-            // LPF1,
-            // HPF1,
+            LPF1,
+            HPF1,
             // feedbackDelay1,
             panVol1,
             channel1,
@@ -152,9 +177,10 @@ export default new Vuex.Store({
         ),
         track2: new Tone.Player(buffer2).chain(
             // ampEnv2,
+            bitcrush2,
             distortion2,
-            // LPF2,
-            // HPF2,
+            LPF2,
+            HPF2,
             // feedbackDelay2,
             panVol2,
             channel2,
@@ -162,9 +188,10 @@ export default new Vuex.Store({
         ),
         track3: new Tone.Player(buffer3).chain(
             // ampEnv3,
+            bitcrush3,
             distortion3,
-            // LPF3,
-            // HPF3,
+            LPF3,
+            HPF3,
             // feedbackDelay3,
             panVol3,
             channel3,
@@ -172,9 +199,10 @@ export default new Vuex.Store({
         ),
         track4: new Tone.Player(buffer4).chain(
             // ampEnv4,
+            bitcrush4,
             distortion4,
-            // LPF4,
-            // HPF4,
+            LPF4,
+            HPF4,
             // feedbackDelay4,
             panVol4,
             channel4,
@@ -182,9 +210,10 @@ export default new Vuex.Store({
         ),
         track5: new Tone.Player(buffer5).chain(
             // ampEnv5,
+            bitcrush5,
             distortion5,
-            // LPF5,
-            // HPF5,
+            LPF5,
+            HPF5,
             // feedbackDelay5,
             panVol5,
             channel5,
@@ -192,9 +221,10 @@ export default new Vuex.Store({
         ),
         track6: new Tone.Player(buffer6).chain(
             // ampEnv6,
+            bitcrush6,
             distortion6,
-            // LPF6,
-            // HPF6,
+            LPF6,
+            HPF6,
             // feedbackDelay6,
             panVol6,
             channel6,
@@ -288,13 +318,13 @@ export default new Vuex.Store({
                 return Array.from({ length: state.numberOfSteps }, () => ({
                     id: uuid(),
                     active: false,
-                    pitch: { param1: 64, type: "bipolar" },
-                    decay: { param1: 127, type: "unipolar" },
-                    pan: { param1: 64, type: "bipolar" },
-                    volume: { param1: 127, type: "unipolar" },
-                    distortion: { param1: 0, type: "unipolar" },
-                    filter: { param1: 64, type: "bipolar" },
-                    bitcrush: { param1: 0, type: "unipolar" },
+                    pitch: { param1: 64, type1: "bipolar" },
+                    decay: { param1: 127, type1: "unipolar" },
+                    pan: { param1: 64, type1: "bipolar" },
+                    volume: { param1: 127, type1: "unipolar" },
+                    distortion: { param1: 0, type1: "unipolar" },
+                    filter: { param1: 64, type1: "bipolar", param2: 0, type2: "unipolar"},
+                    bitcrush: { param1: 127, type1: "unipolar" },
                 }));
             };
             // Initialized Tracks Data
@@ -351,14 +381,45 @@ export default new Vuex.Store({
                 state.tracksDATA[payload.trackNumber][payload.selectedMeasure][
                     payload.selectedStep
                 ];
-            // eval(`distortion${payload.trackNumber + 1}`).distortion = linearRange(
-            //     0,
-            //     1,
-            //     0,
-            //     127,
-            //     currentStepParametersTrack.distortion.param1
-            // );
-            eval(`distortion${payload.trackNumber + 1}`).distortion = linearRange(
+            if (currentStepParametersTrack.filter.param1 >= 64) {
+                eval(`HPF${payload.trackNumber + 1}`).set({
+                    frequency: linearRange(
+                        0,
+                        4000,
+                        64,
+                        127,
+                        currentStepParametersTrack.filter.param1
+                    ),
+                });
+                eval(`LPF${payload.trackNumber + 1}`).set({
+                    frequency: 20000
+                });
+            } else {
+                eval(`HPF${payload.trackNumber + 1}`).set({
+                    frequency: 0
+                });
+                eval(`LPF${payload.trackNumber + 1}`).set({
+                    frequency: linearRange(
+                        40,
+                        10000,
+                        0,
+                        63,
+                        currentStepParametersTrack.filter.param1
+                    ),
+                });
+            }
+            eval(`bitcrush${payload.trackNumber + 1}`).set({
+                bits: linearRange(
+                    1,
+                    16,
+                    0,
+                    127,
+                    currentStepParametersTrack.bitcrush.param1
+                ),
+            });
+            eval(
+                `distortion${payload.trackNumber + 1}`
+            ).distortion = linearRange(
                 0,
                 1,
                 0,
