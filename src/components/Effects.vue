@@ -9,26 +9,19 @@
             >
                 Pitch
             </button> -->
-            <!-- <button
-                @click="$emit('change-effect', 'decay')"
-                :class="{ active: currentEffect === 'decay' }"
-                class="effect__btn"
-            >
-                Decay
-            </button> -->
-            <button
-                @click="$emit('change-effect', 'volume')"
-                :class="{ active: currentEffect === 'volume' }"
-                class="effect__btn"
-            >
-                Volume
-            </button>
             <button
                 @click="$emit('change-effect', 'distortion')"
                 :class="{ active: currentEffect === 'distortion' }"
                 class="effect__btn"
             >
                 Distortion
+            </button>
+            <button
+                @click="$emit('change-effect', 'bitcrush')"
+                :class="{ active: currentEffect === 'bitcrush' }"
+                class="effect__btn"
+            >
+                Bitcrush
             </button>
             <button
                 @click="$emit('change-effect', 'filter')"
@@ -38,11 +31,18 @@
                 Filter
             </button>
             <button
-                @click="$emit('change-effect', 'bitcrush')"
-                :class="{ active: currentEffect === 'bitcrush' }"
+                @click="$emit('change-effect', 'delay')"
+                :class="{ active: currentEffect === 'delay' }"
                 class="effect__btn"
             >
-                Bitcrush
+                Delay
+            </button>
+            <button
+                @click="$emit('change-effect', 'volume')"
+                :class="{ active: currentEffect === 'volume' }"
+                class="effect__btn"
+            >
+                Volume
             </button>
         </div>
         <div class="effect__locks">

@@ -170,13 +170,13 @@ export default {
     },
     watch: {
         currentStepAndMeasure: {
-            async handler(payload) {
+            handler(payload) {
                 if (
                     payload.step >= 0 &&
                     this.track[this.$store.state.currentMeasure][payload.step]
                         .active === true
                 ) {
-                    await this.$store.commit("updateStateEffectsParameters", {
+                    this.$store.commit("updateStateEffectsParameters", {
                         trackNumber: this.trackNumber,
                         selectedMeasure: this.selectedMeasure,
                         selectedStep: payload.step,

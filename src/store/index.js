@@ -11,6 +11,7 @@ const INITIAL_TEMPO = 90;
 const ALL_CHANNELS_VOLUME = 0;
 const MASTER_CHANNEL_VOLUME = 0;
 const MASTER_CHANNEL_PAN = 0; // Must be within -1 & 1
+const SUBDIVISION = ["4n", "4n.", "4t", "8n", "8n.", "8t", "16n", "16n.", "16t", "32n"];
 
 // Sounds import
 import sound1 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
@@ -26,51 +27,6 @@ const buffer3 = new Tone.ToneAudioBuffer(sound3);
 const buffer4 = new Tone.ToneAudioBuffer(sound4);
 const buffer5 = new Tone.ToneAudioBuffer(sound5);
 const buffer6 = new Tone.ToneAudioBuffer(sound6);
-
-// const ampEnv1 = new Tone.AmplitudeEnvelope({
-//     attack: 0,
-//     decay: 1,
-//     sustain: 1,
-//     release: 1
-//  });
-// const ampEnv2 = new Tone.AmplitudeEnvelope({
-//     attack: 0,
-//     decay: 0,
-//     sustain: 1,
-//     release: 0.1
-//  });
-// const ampEnv3 = new Tone.AmplitudeEnvelope({
-//     attack: 0,
-//     decay: 0,
-//     sustain: 1,
-//     release: 0.1
-//  });
-// const ampEnv4 = new Tone.AmplitudeEnvelope({
-//     attack: 0,
-//     decay: 0,
-//     sustain: 1,
-//     release: 0.1
-//  });
-
-// const distortion1 = new Tone.Distortion(0);
-// const distortion2 = new Tone.Distortion(0);
-// const distortion3 = new Tone.Distortion(0);
-// const distortion4 = new Tone.Distortion(0);
-
-// const HPF1 = new Tone.Filter(0, "highpass");
-// const HPF2 = new Tone.Filter(0, "highpass");
-// const HPF3 = new Tone.Filter(0, "highpass");
-// const HPF4 = new Tone.Filter(0, "highpass");
-
-// const LPF1 = new Tone.Filter(20000, "lowpass");
-// const LPF2 = new Tone.Filter(20000, "lowpass");
-// const LPF3 = new Tone.Filter(20000, "lowpass");
-// const LPF4 = new Tone.Filter(20000, "lowpass");
-
-// const feedbackDelay1 = new Tone.FeedbackDelay("8n", 0);
-// const feedbackDelay2 = new Tone.FeedbackDelay("8n", 0);
-// const feedbackDelay3 = new Tone.FeedbackDelay("8n", 0);
-// const feedbackDelay4 = new Tone.FeedbackDelay("8n", 0);
 
 // Dog Mod
 const dogDisto = new Tone.Distortion(0.9);
@@ -107,8 +63,7 @@ const bitcrush4 = new Tone.BitCrusher(16);
 const bitcrush5 = new Tone.BitCrusher(16);
 const bitcrush6 = new Tone.BitCrusher(16);
 
-// Filte1
-
+// Filter
 const LPF1 = new Tone.Filter(20000, "lowpass");
 const HPF1 = new Tone.Filter(0, "highpass");
 const LPF2 = new Tone.Filter(20000, "lowpass");
@@ -121,6 +76,21 @@ const LPF5 = new Tone.Filter(20000, "lowpass");
 const HPF5 = new Tone.Filter(0, "highpass");
 const LPF6 = new Tone.Filter(20000, "lowpass");
 const HPF6 = new Tone.Filter(0, "highpass");
+
+// Delay
+const feedbackDelay1 = new Tone.FeedbackDelay("8n", 0);
+feedbackDelay1.set({ wet: 0 });
+const feedbackDelay2 = new Tone.FeedbackDelay("8n", 0);
+feedbackDelay2.set({ wet: 0 });
+const feedbackDelay3 = new Tone.FeedbackDelay("8n", 0);
+feedbackDelay3.set({ wet: 0 });
+const feedbackDelay4 = new Tone.FeedbackDelay("8n", 0);
+feedbackDelay4.set({ wet: 0 });
+const feedbackDelay5 = new Tone.FeedbackDelay("8n", 0);
+feedbackDelay5.set({ wet: 0 });
+const feedbackDelay6 = new Tone.FeedbackDelay("8n", 0);
+feedbackDelay6.set({ wet: 0 });
+
 
 // Channels & Master section
 const channel1 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
@@ -170,7 +140,7 @@ export default new Vuex.Store({
             distortion1,
             LPF1,
             HPF1,
-            // feedbackDelay1,
+            feedbackDelay1,
             panVol1,
             channel1,
             masterChannel
@@ -181,7 +151,7 @@ export default new Vuex.Store({
             distortion2,
             LPF2,
             HPF2,
-            // feedbackDelay2,
+            feedbackDelay2,
             panVol2,
             channel2,
             masterChannel
@@ -192,7 +162,7 @@ export default new Vuex.Store({
             distortion3,
             LPF3,
             HPF3,
-            // feedbackDelay3,
+            feedbackDelay3,
             panVol3,
             channel3,
             masterChannel
@@ -203,7 +173,7 @@ export default new Vuex.Store({
             distortion4,
             LPF4,
             HPF4,
-            // feedbackDelay4,
+            feedbackDelay4,
             panVol4,
             channel4,
             masterChannel
@@ -214,7 +184,7 @@ export default new Vuex.Store({
             distortion5,
             LPF5,
             HPF5,
-            // feedbackDelay5,
+            feedbackDelay5,
             panVol5,
             channel5,
             masterChannel
@@ -225,7 +195,7 @@ export default new Vuex.Store({
             distortion6,
             LPF6,
             HPF6,
-            // feedbackDelay6,
+            feedbackDelay6,
             panVol6,
             channel6,
             masterChannel
@@ -319,11 +289,11 @@ export default new Vuex.Store({
                     id: uuid(),
                     active: false,
                     pitch: { param1: 64, type1: "bipolar" },
-                    decay: { param1: 127, type1: "unipolar" },
+                    delay: { param1: 64, type1: "unipolar", param2: 0, type2: "unipolar" },
                     pan: { param1: 64, type1: "bipolar" },
                     volume: { param1: 127, type1: "unipolar" },
                     distortion: { param1: 0, type1: "unipolar" },
-                    filter: { param1: 64, type1: "bipolar", param2: 0, type2: "unipolar"},
+                    filter: { param1: 64, type1: "bipolar"},
                     bitcrush: { param1: 127, type1: "unipolar" },
                 }));
             };
@@ -442,11 +412,39 @@ export default new Vuex.Store({
                     currentStepParametersTrack.pan.param1
                 ),
             });
+            eval(`feedbackDelay${payload.trackNumber + 1}`).set({
+                delayTime: SUBDIVISION[(linearRange(
+                    0,
+                    SUBDIVISION.length - 1,
+                    0,
+                    127,
+                    currentStepParametersTrack.delay.param1
+                )).toFixed(0)],
+                feedback: linearRange(
+                    0,
+                    0.8,
+                    0,
+                    127,
+                    currentStepParametersTrack.delay.param2
+                ),
+                wet: linearRange(
+                    0,
+                    0.5,
+                    0,
+                    127,
+                    currentStepParametersTrack.delay.param2
+                ),
+            });
         },
         onChangeParameterLock1(state, payload) {
             state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
                 payload.selectedStep
             ][payload.currentEffect].param1 = payload.value;
+        },
+        onChangeParameterLock2(state, payload) {
+            state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
+                payload.selectedStep
+            ][payload.currentEffect].param2 = payload.value;
         },
         // MASTER PARAMETERS
         /**
