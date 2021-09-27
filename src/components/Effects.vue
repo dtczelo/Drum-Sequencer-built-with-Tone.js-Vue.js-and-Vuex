@@ -2,20 +2,20 @@
     <div class="effect">
         <hr />
         <div class="effect__selection-container">
-            <button
+            <!-- <button
                 @click="$emit('change-effect', 'pitch')"
                 :class="{ active: currentEffect === 'pitch' }"
                 class="effect__btn"
             >
                 Pitch
-            </button>
-            <button
+            </button> -->
+            <!-- <button
                 @click="$emit('change-effect', 'decay')"
                 :class="{ active: currentEffect === 'decay' }"
                 class="effect__btn"
             >
                 Decay
-            </button>
+            </button> -->
             <button
                 @click="$emit('change-effect', 'volume')"
                 :class="{ active: currentEffect === 'volume' }"
@@ -30,7 +30,7 @@
             >
                 Distortion
             </button>
-            <button
+            <!-- <button
                 @click="$emit('change-effect', 'filter')"
                 :class="{ active: currentEffect === 'filter' }"
                 class="effect__btn"
@@ -43,7 +43,7 @@
                 class="effect__btn"
             >
                 Bitcrush
-            </button>
+            </button> -->
         </div>
         <div class="effect__locks">
             <Lock

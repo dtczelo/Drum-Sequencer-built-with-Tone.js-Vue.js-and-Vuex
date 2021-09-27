@@ -5,6 +5,14 @@ import { v4 as uuid } from "uuid";
 
 Vue.use(Vuex);
 
+// Constantes
+const LATENCY = 0.05; // add a amount of time on schedule main clock to handle parameters locks processing
+const INITIAL_TEMPO = 90;
+const ALL_CHANNELS_VOLUME = 0;
+const MASTER_CHANNEL_VOLUME = 0;
+const MASTER_CHANNEL_PAN = 0; // Must be within -1 & 1
+
+// Sounds import
 import sound1 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
 import sound2 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CLAP.wav";
 import sound3 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808CHH.wav";
@@ -12,65 +20,12 @@ import sound4 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808S_A.wav"
 import sound5 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/FINGSNAP_A.wav";
 import sound6 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/CABASA.wav";
 
-const buffer1 = new Tone.ToneAudioBuffer(
-    sound1,
-    () => {
-        console.log("Buffer OK !");
-    },
-    (error) => {
-        console.log(error);
-    }
-);
-const buffer2 = new Tone.ToneAudioBuffer(
-    sound2,
-    () => {
-        console.log("Buffer OK !");
-    },
-    (error) => {
-        console.log(error);
-    }
-);
-const buffer3 = new Tone.ToneAudioBuffer(
-    sound3,
-    () => {
-        console.log("Buffer OK !");
-    },
-    (error) => {
-        console.log(error);
-    }
-);
-const buffer4 = new Tone.ToneAudioBuffer(
-    sound4,
-    () => {
-        console.log("Buffer OK !");
-    },
-    (error) => {
-        console.log(error);
-    }
-);
-const buffer5 = new Tone.ToneAudioBuffer(
-    sound5,
-    () => {
-        console.log("Buffer OK !");
-    },
-    (error) => {
-        console.log(error);
-    }
-);
-const buffer6 = new Tone.ToneAudioBuffer(
-    sound6,
-    () => {
-        console.log("Buffer OK !");
-    },
-    (error) => {
-        console.log(error);
-    }
-);
-
-const initialTempo = 120;
-const allChannelsVolume = 0;
-const masterChannelVolume = 0;
-const masterChannelPan = 0; // Must be within -1 & 1
+const buffer1 = new Tone.ToneAudioBuffer(sound1);
+const buffer2 = new Tone.ToneAudioBuffer(sound2);
+const buffer3 = new Tone.ToneAudioBuffer(sound3);
+const buffer4 = new Tone.ToneAudioBuffer(sound4);
+const buffer5 = new Tone.ToneAudioBuffer(sound5);
+const buffer6 = new Tone.ToneAudioBuffer(sound6);
 
 // const ampEnv1 = new Tone.AmplitudeEnvelope({
 //     attack: 0,
@@ -144,14 +99,17 @@ const panVol5 = new Tone.PanVol(0, 0);
 const panVol6 = new Tone.PanVol(0, 0);
 
 // Channels & Master section
-const channel1 = new Tone.Channel(allChannelsVolume, 0);
-const channel2 = new Tone.Channel(allChannelsVolume, 0);
-const channel3 = new Tone.Channel(allChannelsVolume, 0);
-const channel4 = new Tone.Channel(allChannelsVolume, 0);
-const channel5 = new Tone.Channel(allChannelsVolume, 0);
-const channel6 = new Tone.Channel(allChannelsVolume, 0);
+const channel1 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
+const channel2 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
+const channel3 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
+const channel4 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
+const channel5 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
+const channel6 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
 
-const masterChannel = new Tone.Channel(masterChannelVolume, masterChannelPan);
+const masterChannel = new Tone.Channel(
+    MASTER_CHANNEL_VOLUME,
+    MASTER_CHANNEL_PAN
+);
 
 masterChannel.connect(limiter);
 
@@ -181,7 +139,7 @@ export default new Vuex.Store({
         numberOfSteps: 16,
         // TracksDATA => Track : Array => Measure : Array => Steps : Array
         tracksDATA: [],
-        tempo: initialTempo,
+        tempo: INITIAL_TEMPO,
         track1: new Tone.Player(buffer1).chain(
             // ampEnv1,
             distortion1,
@@ -280,7 +238,7 @@ export default new Vuex.Store({
         },
         // CLOCK
         incrementMainClock(state, time) {
-            state.mainClock = time;
+            state.mainClock = time + LATENCY;
         },
         incrementScheduleTick(state) {
             state.scheduleTick++;
@@ -292,7 +250,7 @@ export default new Vuex.Store({
             state.scheduleTick = -1;
         },
         initTempo() {
-            Tone.Transport.bpm.value = initialTempo;
+            Tone.Transport.bpm.value = INITIAL_TEMPO;
         },
         incrementTempo(state) {
             state.tempo++;
@@ -387,6 +345,48 @@ export default new Vuex.Store({
         // onChangeMasterReverbSend(state, value) {
         //     reverbChannel.volume.value = value;
         // },
+        // EFFECTS PARAMETERS
+        updateStateEffectsParameters(state, payload) {
+            const currentStepParametersTrack =
+                state.tracksDATA[payload.trackNumber][payload.selectedMeasure][
+                    payload.selectedStep
+                ];
+            // eval(`distortion${payload.trackNumber + 1}`).distortion = linearRange(
+            //     0,
+            //     1,
+            //     0,
+            //     127,
+            //     currentStepParametersTrack.distortion.param1
+            // );
+            eval(`distortion${payload.trackNumber + 1}`).distortion = linearRange(
+                0,
+                1,
+                0,
+                127,
+                currentStepParametersTrack.distortion.param1
+            );
+            eval(`panVol${payload.trackNumber + 1}`).set({
+                volume: linearRange(
+                    -60,
+                    0,
+                    0,
+                    127,
+                    currentStepParametersTrack.volume.param1
+                ),
+                pan: linearRange(
+                    -1,
+                    1,
+                    0,
+                    127,
+                    currentStepParametersTrack.pan.param1
+                ),
+            });
+        },
+        onChangeParameterLock1(state, payload) {
+            state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
+                payload.selectedStep
+            ][payload.currentEffect].param1 = payload.value;
+        },
         // MASTER PARAMETERS
         /**
          * Change master volume value in db
@@ -396,176 +396,6 @@ export default new Vuex.Store({
          */
         onChangeMasterVolume(state, value) {
             masterChannel.volume.value = value;
-        },
-        // EFFECTS PARAMETERS
-        updateStateEffectsParameters(state, payload) {
-            const currentStepParametersTrack1 =
-                state.tracksDATA[0][payload.selectedMeasure][
-                    payload.selectedStep
-                ];
-            const currentStepParametersTrack2 =
-                state.tracksDATA[1][payload.selectedMeasure][
-                    payload.selectedStep
-                ];
-            const currentStepParametersTrack3 =
-                state.tracksDATA[2][payload.selectedMeasure][
-                    payload.selectedStep
-                ];
-            const currentStepParametersTrack4 =
-                state.tracksDATA[3][payload.selectedMeasure][
-                    payload.selectedStep
-                ];
-            const currentStepParametersTrack5 =
-                state.tracksDATA[4][payload.selectedMeasure][
-                    payload.selectedStep
-                ];
-            const currentStepParametersTrack6 =
-                state.tracksDATA[5][payload.selectedMeasure][
-                    payload.selectedStep
-                ];
-            distortion1.distortion = linearRange(
-                0,
-                1,
-                0,
-                127,
-                currentStepParametersTrack1.distortion.param1
-            );
-            panVol1.set({
-                volume: linearRange(
-                    -60,
-                    0,
-                    0,
-                    127,
-                    currentStepParametersTrack1.volume.param1
-                ),
-                pan: linearRange(
-                    -1,
-                    1,
-                    0,
-                    127,
-                    currentStepParametersTrack1.pan.param1
-                ),
-            });
-            distortion2.distortion = linearRange(
-                0,
-                1,
-                0,
-                127,
-                currentStepParametersTrack2.distortion.param1
-            );
-            panVol2.set({
-                volume: linearRange(
-                    -60,
-                    0,
-                    0,
-                    127,
-                    currentStepParametersTrack2.volume.param1
-                ),
-                pan: linearRange(
-                    -1,
-                    1,
-                    0,
-                    127,
-                    currentStepParametersTrack2.pan.param1
-                ),
-            });
-            distortion3.distortion = linearRange(
-                0,
-                1,
-                0,
-                127,
-                currentStepParametersTrack3.distortion.param1
-            );
-            panVol3.set({
-                volume: linearRange(
-                    -60,
-                    0,
-                    0,
-                    127,
-                    currentStepParametersTrack3.volume.param1
-                ),
-                pan: linearRange(
-                    -1,
-                    1,
-                    0,
-                    127,
-                    currentStepParametersTrack3.pan.param1
-                ),
-            });
-            distortion4.distortion = linearRange(
-                0,
-                1,
-                0,
-                127,
-                currentStepParametersTrack4.distortion.param1
-            );
-            panVol4.set({
-                volume: linearRange(
-                    -60,
-                    0,
-                    0,
-                    127,
-                    currentStepParametersTrack4.volume.param1
-                ),
-                pan: linearRange(
-                    -1,
-                    1,
-                    0,
-                    127,
-                    currentStepParametersTrack4.pan.param1
-                ),
-            });
-            distortion5.distortion = linearRange(
-                0,
-                1,
-                0,
-                127,
-                currentStepParametersTrack5.distortion.param1
-            );
-            panVol5.set({
-                volume: linearRange(
-                    -60,
-                    0,
-                    0,
-                    127,
-                    currentStepParametersTrack5.volume.param1
-                ),
-                pan: linearRange(
-                    -1,
-                    1,
-                    0,
-                    127,
-                    currentStepParametersTrack5.pan.param1
-                ),
-            });
-            distortion6.distortion = linearRange(
-                0,
-                1,
-                0,
-                127,
-                currentStepParametersTrack6.distortion.param1
-            );
-            panVol6.set({
-                volume: linearRange(
-                    -60,
-                    0,
-                    0,
-                    127,
-                    currentStepParametersTrack6.volume.param1
-                ),
-                pan: linearRange(
-                    -1,
-                    1,
-                    0,
-                    127,
-                    currentStepParametersTrack6.pan.param1
-                ),
-            });
-        },
-        onChangeParameterLock1(state, payload) {
-            state.tracksDATA[payload.currentTrack][payload.selectedMeasure][
-                payload.selectedStep
-            ][payload.currentEffect].param1 = payload.value;
         },
     },
     actions: {},

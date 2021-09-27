@@ -140,7 +140,7 @@ export default {
             isForwarding: false,
             isBackwarding: false,
             currentTrack: 0,
-            currentEffect: "pitch",
+            currentEffect: "volume",
             selectedMeasure: 0,
         };
     },
