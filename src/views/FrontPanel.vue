@@ -22,7 +22,9 @@
         <div class="master-section">
             <Master />
         </div>
-        <!-- <hr /> -->
+        <div class="looper">
+            <Looper/>
+        </div>
         <div class="effects">
             <Effects
                 :currentTrack="currentTrack"
@@ -124,6 +126,8 @@ import Track from "../components/Track.vue";
 import Master from "../components/Master.vue";
 import Effects from "../components/Effects.vue";
 import Dot from "../components/Dot.vue";
+import Looper from "../components/Looper.vue";
+
 
 export default {
     components: {
@@ -132,6 +136,7 @@ export default {
         Master,
         Effects,
         Dot,
+        Looper
     },
     data() {
         return {
@@ -233,10 +238,16 @@ export default {
 </script>
 
 <style lang="scss">
+.container-fluid {
+    width: 100%;
+    margin: 0 auto;
+}
+
 .front-panel {
     display: grid;
     grid-template-areas:
         "tracks tracks tracks master"
+        "looper looper looper looper"
         "effects effects effects effects"
         "steps steps steps steps"
         "transport transport transport transport";
@@ -245,9 +256,8 @@ export default {
 
 .tracks {
     grid-area: tracks;
-    height: 50vh;
-    width: 100%;
-    margin: 0 auto;
+    height: 40vh;
+    @extend .container-fluid;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -257,22 +267,25 @@ export default {
 .master-section {
     grid-area: master;
     height: 35vh;
-    width: 100%;
-    margin: 0 auto;
+    @extend .container-fluid;
+}
+
+.looper {
+    grid-area: looper;
+    height: 15vh;
+    @extend .container-fluid;
 }
 
 .effects {
     grid-area: effects;
-    width: 100%;
     height: 25vh;
-    margin: 0 auto;
+    @extend .container-fluid;
 }
 
 .steps {
     grid-area: steps;
     height: 10vh;
-    width: 100%;
-    margin: 0 auto;
+    @extend .container-fluid;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -287,8 +300,7 @@ export default {
 .transport {
     grid-area: transport;
     height: 5vh;
-    width: 100%;
-    margin: 0 auto;
+    @extend .container-fluid;
     padding: 0 20px;
     display: flex;
     justify-content: space-between;
