@@ -3,7 +3,7 @@
         <div class="master__title">
             <p>MASTER</p>
         </div>
-        <p class="master__sub-title">Effects</p>
+        <!-- <p class="master__sub-title">Effects</p>
         <div class="master__section">
             <div class="master__knob">
                 <p class="master__knob-label">Chorus Fb.</p>
@@ -68,7 +68,7 @@
                     disabled="true"
                 />
             </div>
-        </div>
+        </div> -->
         <p class="master__sub-title">Amp.</p>
         <div class="master__section">
             <div class="master__knob">
@@ -116,8 +116,13 @@
             </div>
             <div class="master__knob">
                 <p class="master__switch-label">Swing sub.</p>
-                <span>8th</span><switches v-model="isSubSwing8th"></switches><span>4th</span>
+                <span>8th</span><switches v-model="isSubSwing8th"></switches
+                ><span>4th</span>
             </div>
+        </div>
+        <p class="master__sub-title">Ramdomize</p>
+        <div class="master__section">
+            <button @click="ramdomAll" class="master__btn">Ramdom</button>
         </div>
     </div>
 </template>
@@ -162,6 +167,11 @@ export default {
             this.$store.commit("onChangeMasterVolume", newValue);
         },
     },
+    methods: {
+        ramdomAll() {
+            this.$store.commit("ramdomAllDATA");
+        }
+    }
 };
 </script>
 
@@ -184,7 +194,7 @@ export default {
     }
     &__btn {
         padding: 0.5rem 1rem;
-        font-size: 1.2rem;
+        font-size: 0.8rem;
         background-color: var(--secondary-color);
         color: var(--text-color);
         border-radius: 4px;

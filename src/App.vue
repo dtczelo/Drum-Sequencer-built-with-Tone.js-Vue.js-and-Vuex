@@ -144,7 +144,6 @@ html {
     width: 100%;
     height: 100vh;
     min-width: 1024px;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -208,15 +207,14 @@ hr {
 // Dog Mod
 
 .dogMod-img {
-  width: 100%;
-  height: 100%;
+  width: 10%;
+  height: 10%;
   position: absolute;
-  left: 0;
+  right: 0;
   top: 0;
   background-image: url("./assets/dog-shaking-head.png");
-  background-position: 68% 25%;
   background-repeat: no-repeat;
-  background-size: 20% 30%;
+  background-size: 100% 100%;
 }
 
 // To the moon mod

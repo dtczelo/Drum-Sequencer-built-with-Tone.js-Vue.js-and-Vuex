@@ -38,6 +38,13 @@
                 Delay
             </button>
             <button
+                @click="$emit('change-effect', 'reverb')"
+                :class="{ active: currentEffect === 'reverb' }"
+                class="effect__btn"
+            >
+                Reverb
+            </button>
+            <button
                 @click="$emit('change-effect', 'volume')"
                 :class="{ active: currentEffect === 'volume' }"
                 class="effect__btn"

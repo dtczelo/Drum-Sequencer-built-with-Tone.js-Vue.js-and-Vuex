@@ -11,7 +11,18 @@ const INITIAL_TEMPO = 90;
 const ALL_CHANNELS_VOLUME = 0;
 const MASTER_CHANNEL_VOLUME = 0;
 const MASTER_CHANNEL_PAN = 0; // Must be within -1 & 1
-const SUBDIVISION = ["4n", "4n.", "4t", "8n", "8n.", "8t", "16n", "16n.", "16t", "32n"];
+const SUBDIVISION = [
+    "4n",
+    "4n.",
+    "4t",
+    "8n",
+    "8n.",
+    "8t",
+    "16n",
+    "16n.",
+    "16t",
+    "32n",
+];
 
 // Sounds import
 import sound1 from "../assets/samples/Boxed_Ear_R-8_MkII_Single_Hits/808K_A.wav";
@@ -91,6 +102,19 @@ feedbackDelay5.set({ wet: 0 });
 const feedbackDelay6 = new Tone.FeedbackDelay("8n", 0);
 feedbackDelay6.set({ wet: 0 });
 
+//Reverb
+const reverb1 = new Tone.Reverb(0.5);
+reverb1.set({ wet: 0 });
+const reverb2 = new Tone.Reverb(0.5);
+reverb2.set({ wet: 0 });
+const reverb3 = new Tone.Reverb(0.5);
+reverb3.set({ wet: 0 });
+const reverb4 = new Tone.Reverb(0.5);
+reverb4.set({ wet: 0 });
+const reverb5 = new Tone.Reverb(0.5);
+reverb5.set({ wet: 0 });
+const reverb6 = new Tone.Reverb(0.5);
+reverb6.set({ wet: 0 });
 
 // Channels & Master section
 const channel1 = new Tone.Channel(ALL_CHANNELS_VOLUME, 0);
@@ -141,6 +165,7 @@ export default new Vuex.Store({
             LPF1,
             HPF1,
             feedbackDelay1,
+            reverb1,
             panVol1,
             channel1,
             masterChannel
@@ -152,6 +177,7 @@ export default new Vuex.Store({
             LPF2,
             HPF2,
             feedbackDelay2,
+            reverb2,
             panVol2,
             channel2,
             masterChannel
@@ -163,6 +189,7 @@ export default new Vuex.Store({
             LPF3,
             HPF3,
             feedbackDelay3,
+            reverb3,
             panVol3,
             channel3,
             masterChannel
@@ -174,6 +201,7 @@ export default new Vuex.Store({
             LPF4,
             HPF4,
             feedbackDelay4,
+            reverb4,
             panVol4,
             channel4,
             masterChannel
@@ -185,6 +213,7 @@ export default new Vuex.Store({
             LPF5,
             HPF5,
             feedbackDelay5,
+            reverb5,
             panVol5,
             channel5,
             masterChannel
@@ -196,6 +225,7 @@ export default new Vuex.Store({
             LPF6,
             HPF6,
             feedbackDelay6,
+            reverb6,
             panVol6,
             channel6,
             masterChannel
@@ -289,11 +319,22 @@ export default new Vuex.Store({
                     id: uuid(),
                     active: false,
                     pitch: { param1: 64, type1: "bipolar" },
-                    delay: { param1: 64, type1: "unipolar", param2: 0, type2: "unipolar" },
+                    delay: {
+                        param1: 64,
+                        type1: "unipolar",
+                        param2: 0,
+                        type2: "unipolar",
+                    },
+                    reverb: {
+                        param1: 64,
+                        type1: "unipolar",
+                        param2: 0,
+                        type2: "unipolar",
+                    },
                     pan: { param1: 64, type1: "bipolar" },
                     volume: { param1: 127, type1: "unipolar" },
                     distortion: { param1: 0, type1: "unipolar" },
-                    filter: { param1: 64, type1: "bipolar"},
+                    filter: { param1: 64, type1: "bipolar" },
                     bitcrush: { param1: 127, type1: "unipolar" },
                 }));
             };
@@ -362,11 +403,11 @@ export default new Vuex.Store({
                     ),
                 });
                 eval(`LPF${payload.trackNumber + 1}`).set({
-                    frequency: 20000
+                    frequency: 20000,
                 });
             } else {
                 eval(`HPF${payload.trackNumber + 1}`).set({
-                    frequency: 0
+                    frequency: 0,
                 });
                 eval(`LPF${payload.trackNumber + 1}`).set({
                     frequency: linearRange(
@@ -413,13 +454,16 @@ export default new Vuex.Store({
                 ),
             });
             eval(`feedbackDelay${payload.trackNumber + 1}`).set({
-                delayTime: SUBDIVISION[(linearRange(
-                    0,
-                    SUBDIVISION.length - 1,
-                    0,
-                    127,
-                    currentStepParametersTrack.delay.param1
-                )).toFixed(0)],
+                delayTime:
+                    SUBDIVISION[
+                        linearRange(
+                            0,
+                            SUBDIVISION.length - 1,
+                            0,
+                            127,
+                            currentStepParametersTrack.delay.param1
+                        ).toFixed(0)
+                    ],
                 feedback: linearRange(
                     0,
                     0.8,
@@ -433,6 +477,22 @@ export default new Vuex.Store({
                     0,
                     127,
                     currentStepParametersTrack.delay.param2
+                ),
+            });
+            eval(`reverb${payload.trackNumber + 1}`).set({
+                decay: linearRange(
+                    0,
+                    8,
+                    0,
+                    127,
+                    currentStepParametersTrack.reverb.param1
+                ),
+                wet: linearRange(
+                    0,
+                    0.5,
+                    0,
+                    127,
+                    currentStepParametersTrack.reverb.param2
                 ),
             });
         },
@@ -455,6 +515,52 @@ export default new Vuex.Store({
          */
         onChangeMasterVolume(state, value) {
             masterChannel.volume.value = value;
+        },
+        // RAMDOMIZE
+        ramdomAllDATA(state) {
+            const b = state.tracksDATA;
+            for (const track of b) {
+                for (const measure of track) {
+                    measure.forEach((step) => {
+                        step.active = ramdomNumber() > 0.7 ? true : false;
+                        step.distortion.param1 = linearRange(
+                            0,
+                            127,
+                            0,
+                            0.999999999,
+                            ramdomNumber()
+                        );
+                        step.bitcrush.param1 = linearRange(
+                            0,
+                            127,
+                            0,
+                            0.999999999,
+                            ramdomNumber()
+                        );
+                        step.filter.param1 = linearRange(
+                            0,
+                            127,
+                            0,
+                            0.999999999,
+                            ramdomNumber()
+                        );
+                        step.delay.param1 = linearRange(
+                            0,
+                            127,
+                            0,
+                            0.999999999,
+                            ramdomNumber()
+                        );
+                        // step.delay.param2 = linearRange(
+                        //     0,
+                        //     127,
+                        //     0,
+                        //     0.999999999,
+                        //     ramdomNumber()
+                        // );
+                    });
+                }
+            }
         },
     },
     actions: {},
@@ -479,4 +585,8 @@ function linearRange(
         targetMaxRange,
         invlerp(sourceMinRange, sourceMaxRange, value)
     );
+}
+
+function ramdomNumber() {
+    return Math.random();
 }
